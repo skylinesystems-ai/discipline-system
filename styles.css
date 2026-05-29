@@ -1,0 +1,53 @@
+* {
+  padding: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.mission-card:hover {
+  border-color: var(--yellow);
+  transform: translateY(-2px);
+}
+
+.mission-card.completed {
+  border-color: var(--yellow);
+  background: rgba(250,204,21,0.08);
+}
+
+.mission-card h3 {
+  font-size: 1.5rem;
+}
+
+.mission-card p {
+  margin-top: 8px;
+  color: var(--muted);
+}
+
+.mission-check {
+  width: 60px;
+  height: 60px;
+  border-radius: 20px;
+  background: #18181b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 900;
+}
+
+.mission-card.completed .mission-check {
+  background: var(--yellow);
+  color: #000;
+}
+
+.ai-header h2 {
+  margin-top: 12px;
+  font-size: 4rem;
+}
+
+.ai-message-box {
+  margin-top: 30px;
+  border: 1px solid rgba(250,204,21,0.2
