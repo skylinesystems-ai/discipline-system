@@ -1,7 +1,12 @@
+<!-- =========================
+INDEX.HTML
+========================= -->
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
+
   <meta charset="UTF-8" />
 
   <meta
@@ -9,7 +14,9 @@
     content="width=device-width, initial-scale=1.0"
   />
 
-  <title>Projeto Disciplina</title>
+  <title>
+    Projeto Disciplina
+  </title>
 
   <link
     rel="preconnect"
@@ -31,33 +38,12 @@
     rel="stylesheet"
     href="./styles.css"
   />
+
 </head>
 
 <body>
 
-  <!-- SPLASH -->
-
-  <div id="splash-screen">
-
-    <div class="splash-content">
-
-      <h1>
-        DISCIPLINA AI
-      </h1>
-
-      <p>
-        Inicializando sistema...
-      </p>
-
-    </div>
-
-  </div>
-
-  <!-- BACKGROUND -->
-
   <div class="background-glow"></div>
-
-  <!-- APP -->
 
   <div class="app-layout">
 
@@ -76,12 +62,10 @@
         </h2>
 
         <p>
-          Sistema premium de evolução pessoal.
+          Sistema de evolução pessoal.
         </p>
 
       </div>
-
-      <!-- USER -->
 
       <div class="user-card">
 
@@ -103,49 +87,37 @@
 
       </div>
 
-      <!-- MENU -->
-
       <nav class="menu">
 
         <button
-  class="menu-item active"
-  data-target="top"
->
-  Dashboard
-</button>
-
-        <button
-  class="menu-item"
-  data-target="calendar-section"
->
-  Calendário
-</button>
-
-        <button
-  class="menu-item"
-  data-target="missions-section"
->
-  Missões
-</button>
-
-        <button class="menu-item">
-          Progresso
+          class="menu-item active"
+          data-target="top"
+        >
+          Dashboard
         </button>
 
-       <button
-  class="menu-item"
-  data-target="badges-section"
->
-  Badges
-</button>
+        <button
+          class="menu-item"
+          data-target="calendar-section"
+        >
+          Calendário
+        </button>
 
-        <button class="menu-item">
-          Disciplina AI
+        <button
+          class="menu-item"
+          data-target="missions-section"
+        >
+          Missões
+        </button>
+
+        <button
+          class="menu-item"
+          data-target="badges-section"
+        >
+          Badges
         </button>
 
       </nav>
-
-      <!-- TRAINING MODE -->
 
       <div class="training-mode">
 
@@ -173,8 +145,6 @@
 
       </div>
 
-      <!-- STREAK -->
-
       <div class="streak-card">
 
         <p>
@@ -193,22 +163,20 @@
 
     <main class="main-content">
 
-      <!-- HERO -->
-
       <header class="hero">
 
         <div>
 
           <span class="tag">
-            MVP PREMIUM
+            DISCIPLINA
           </span>
 
           <h1>
-            Bem-vindo ao Projeto Disciplina
+            Evolua todos os dias.
           </h1>
 
           <p>
-            Evolua sua mente, corpo e disciplina diariamente.
+            Transforme mente, corpo e espírito.
           </p>
 
         </div>
@@ -243,133 +211,132 @@
 
       </header>
 
-      <!-- PROGRESS -->
+      <!-- EVOLUÇÃO -->
 
-<section class="progress-section">
+      <section class="progress-section">
 
-  <div class="section-top">
+        <div class="section-top">
 
-    <div>
+          <div>
 
-      <span class="tag">
-        EVOLUÇÃO
-      </span>
+            <span class="tag">
+              EVOLUÇÃO
+            </span>
 
-      <h2>
-        Seu progresso
-      </h2>
+            <h2>
+              Seu progresso
+            </h2>
 
-    </div>
+          </div>
 
-    <div class="xp-daily">
+          <div class="xp-daily">
 
-      <p>
-        XP Diário
-      </p>
+            <p>
+              XP Diário
+            </p>
 
-      <h3 id="daily-xp">
-        0
-      </h3>
+            <h3 id="daily-xp">
+              0
+            </h3>
 
-    </div>
+          </div>
 
-  </div>
+        </div>
 
-  <!-- PROGRESS BARS -->
+        <div class="progress-grid">
 
-  <div class="progress-grid">
+          <!-- DISCIPLINA -->
 
-    <!-- DISCIPLINA -->
+          <div class="progress-card">
 
-    <div class="progress-card">
+            <div class="progress-title">
 
-      <div class="progress-title">
+              <span>
+                Disciplina
+              </span>
 
-        <span>
-          Disciplina
-        </span>
+              <strong id="discipline-percent">
+                0%
+              </strong>
 
-        <strong id="discipline-percent">
-          0%
-        </strong>
+            </div>
 
-      </div>
+            <div class="progress-bar">
 
-      <div class="progress-bar">
+              <div
+                class="progress-fill discipline-fill"
+                style="width:0%"
+              ></div>
 
-        <div
-          class="progress-fill discipline-fill"
-          style="width: 0%"
-        ></div>
+            </div>
 
-      </div>
+          </div>
 
-    </div>
+          <!-- MENTALIDADE -->
 
-    <!-- MENTALIDADE -->
+          <div class="progress-card">
 
-    <div class="progress-card">
+            <div class="progress-title">
 
-      <div class="progress-title">
+              <span>
+                Mentalidade
+              </span>
 
-        <span>
-          Mentalidade
-        </span>
+              <strong id="mindset-percent">
+                0%
+              </strong>
 
-        <strong id="mindset-percent">
-          0%
-        </strong>
+            </div>
 
-      </div>
+            <div class="progress-bar">
 
-      <div class="progress-bar">
+              <div
+                class="progress-fill mentality-fill"
+                style="width:0%"
+              ></div>
 
-        <div
-          class="progress-fill mentality-fill"
-          style="width: 0%"
-        ></div>
+            </div>
 
-      </div>
+          </div>
 
-    </div>
+          <!-- ESPIRITUAL -->
 
-    <!-- ESPIRITUAL -->
+          <div class="progress-card">
 
-    <div class="progress-card">
+            <div class="progress-title">
 
-      <div class="progress-title">
+              <span>
+                Espiritual
+              </span>
 
-        <span>
-          Espiritual
-        </span>
+              <strong id="spiritual-percent">
+                0%
+              </strong>
 
-        <strong id="spiritual-percent">
-          0%
-        </strong>
+            </div>
 
-      </div>
+            <div class="progress-bar">
 
-      <div class="progress-bar">
+              <div
+                class="progress-fill spiritual-fill"
+                style="width:0%"
+              ></div>
 
-        <div
-          class="progress-fill spiritual-fill"
-          style="width: 0%"
-        ></div>
+            </div>
 
-      </div>
+          </div>
 
-    </div>
+        </div>
 
-  </div>
+      </section>
 
-</section>
-
-      <!-- CALENDAR -->
+      <!-- CALENDÁRIO -->
 
       <section
-  class="calendar-section"
-  id="calendar-section"
->
+        class="calendar-section"
+        id="calendar-section"
+      >
+
         <div class="section-top">
 
           <div>
@@ -384,15 +351,7 @@
 
           </div>
 
-          <div class="calendar-month">
-
-            Julho 2026
-
-          </div>
-
         </div>
-
-        <!-- WEEK -->
 
         <div class="week-days">
 
@@ -406,32 +365,26 @@
 
         </div>
 
-        <!-- DAYS -->
-
         <div
           class="calendar-grid"
           id="calendar-grid"
-        >
-
-          <!-- JS -->
-
-        </div>
+        ></div>
 
       </section>
 
-      <!-- DAILY MISSIONS -->
+      <!-- MISSÕES -->
 
       <section
-  class="missions-section"
-  id="missions-section"
->
+        class="missions-section"
+        id="missions-section"
+      >
 
         <div class="section-top">
 
           <div>
 
             <span class="tag">
-              MISSÕES DO DIA
+              MISSÕES
             </span>
 
             <h2 id="today-title">
@@ -454,7 +407,7 @@
 
         </div>
 
-        <!-- DAILY TRAIN -->
+        <!-- TREINO -->
 
         <div class="daily-training">
 
@@ -467,20 +420,12 @@
               </span>
 
               <h3 id="training-title">
-                Peito + Tríceps
+                Peito
               </h3>
 
             </div>
 
-            <div class="training-badge">
-
-              Inteligente
-
-            </div>
-
           </div>
-
-          <!-- ACADEMIA -->
 
           <div class="training-columns">
 
@@ -490,11 +435,7 @@
                 Academia
               </h4>
 
-              <ul id="gym-workout">
-
-                <!-- JS -->
-
-              </ul>
+              <ul id="gym-workout"></ul>
 
             </div>
 
@@ -504,11 +445,7 @@
                 Casa
               </h4>
 
-              <ul id="home-workout">
-
-                <!-- JS -->
-
-              </ul>
+              <ul id="home-workout"></ul>
 
             </div>
 
@@ -516,24 +453,18 @@
 
         </div>
 
-        <!-- MISSIONS -->
+        <!-- MISSIONS GRID -->
 
         <div
           class="missions-grid"
           id="missions-container"
-        >
-
-          <!-- JS -->
-
-        </div>
+        ></div>
 
       </section>
 
-      <!-- DAILY CONTENT -->
+      <!-- CONTEÚDO -->
 
       <section class="daily-content-grid">
-
-        <!-- VERSE -->
 
         <div class="content-card">
 
@@ -545,15 +476,9 @@
             Palavra do Dia
           </h2>
 
-          <p id="daily-verse">
-
-            Filipenses 4:13
-
-          </p>
+          <p id="daily-verse"></p>
 
         </div>
-
-        <!-- CARDIO -->
 
         <div class="content-card">
 
@@ -565,31 +490,21 @@
             Cardio sugerido
           </h2>
 
-          <p id="daily-cardio">
-
-            Corrida de 5km
-
-          </p>
+          <p id="daily-cardio"></p>
 
         </div>
-
-        <!-- AI -->
 
         <div class="content-card ai-card">
 
           <span class="tag">
-            IA MOTIVACIONAL
+            IA
           </span>
 
           <h2>
-            DISCIPLINA AI
+            Disciplina AI
           </h2>
 
-          <p id="ai-message">
-
-            Você não precisa sentir vontade. Precisa continuar.
-
-          </p>
+          <p id="ai-message"></p>
 
         </div>
 
@@ -598,9 +513,9 @@
       <!-- BADGES -->
 
       <section
-  class="badges-section"
-  id="badges-section"
->
+        class="badges-section"
+        id="badges-section"
+      >
 
         <div class="section-top">
 
@@ -611,7 +526,7 @@
             </span>
 
             <h2>
-              Conquistas desbloqueadas
+              Conquistas
             </h2>
 
           </div>
@@ -652,26 +567,12 @@
 
           </div>
 
-          <div class="badge-card locked">
-
-            <div class="badge-icon">
-              👑
-            </div>
-
-            <h3>
-              LENDA
-            </h3>
-
-            <p>
-              365 dias seguidos
-            </p>
-
-          </div>
-
         </div>
 
       </section>
 
+
+      </section>
 
     </main>
 
