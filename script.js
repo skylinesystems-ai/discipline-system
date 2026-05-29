@@ -332,63 +332,72 @@ const dailyMissions = [
     id: 1,
     title: 'Treino completo',
     xp: 50,
+    category: 'discipline',
   },
 
   {
     id: 2,
     title: '2 Litros de água',
     xp: 20,
+    category: 'discipline',
   },
 
   {
     id: 3,
     title: 'Sem pornografia',
     xp: 80,
+    category: 'mindset',
   },
 
   {
     id: 4,
     title: 'Sem refrigerante',
     xp: 20,
+    category: 'mindset',
   },
 
   {
     id: 5,
     title: 'Sem doces',
     xp: 25,
+    category: 'mindset',
   },
 
   {
     id: 6,
     title: 'Leitura bíblica',
     xp: 30,
+    category: 'spiritual',
   },
 
   {
     id: 7,
     title: '10 minutos oração',
     xp: 30,
+    category: 'spiritual',
   },
 
   {
     id: 8,
     title: 'Dormir antes das 23h',
     xp: 25,
+    category: 'discipline',
   },
 
   {
     id: 9,
     title: 'Sem procrastinar',
     xp: 35,
+    category: 'discipline',
   },
 
   {
     id: 10,
     title: 'Cardio do dia',
     xp: 35,
+    category: 'discipline',
   },
 ]
-
 /* =========================================
    RENDER TRAINING
 ========================================= */
@@ -508,6 +517,7 @@ function toggleMission(id) {
   )
 
   calculateXP()
+   updateProgressBars()
 
   renderMissions()
 }
@@ -762,3 +772,138 @@ function init() {
 }
 
 init()
+
+/* =========================================
+   MENU NAVIGATION
+========================================= */
+
+const menuItems =
+  document.querySelectorAll('.menu-item')
+
+menuItems.forEach((item) => {
+
+  item.addEventListener(
+    'click',
+    () => {
+
+      menuItems.forEach((btn) => {
+        btn.classList.remove('active')
+      })
+
+      item.classList.add('active')
+
+      const target =
+        item.dataset.target
+
+      if (target === 'top') {
+
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        })
+
+        return
+      }
+
+      const section =
+        document.getElementById(target)
+
+      if (section) {
+
+        section.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        })
+      }
+    }
+  )
+})
+
+/* =========================================
+   PROGRESS SYSTEM
+========================================= */
+
+function updateProgressBars() {
+
+  let disciplineXP = 0
+  let mindsetXP = 0
+  let spiritualXP = 0
+
+  dailyMissions.forEach((mission) => {
+
+    if (
+      appState.completedToday.includes(
+        mission.id
+      )
+    ) {
+
+      if (
+        mission.category ===
+        'discipline'
+      ) {
+
+        disciplineXP += mission.xp
+      }
+
+      if (
+        mission.category ===
+        'mindset'
+      ) {
+
+        mindsetXP += mission.xp
+      }
+
+      if (
+        mission.category ===
+        'spiritual'
+      ) {
+
+        spiritualXP += mission.xp
+      }
+    }
+  })
+
+  const disciplinePercent =
+    Math.min(
+      Math.floor(
+        disciplineXP / 2
+      ),
+      100
+    )
+
+  const mindsetPercent =
+    Math.min(
+      Math.floor(
+        mindsetXP / 2
+      ),
+      100
+    )
+
+  const spiritualPercent =
+    Math.min(
+      Math.floor(
+        spiritualXP / 2
+      ),
+      100
+    )
+
+  document.querySelector(
+    '.discipline-fill'
+  ).style.width =
+    `${disciplinePercent}%`
+
+  document.querySelector(
+    '.mentality-fill'
+  ).style.width =
+    `${mindsetPercent}%`
+
+  document.querySelector(
+    '.spiritual-fill'
+  ).style.width =
+    `${spiritualPercent}%`
+
+  document.getElementById(
+    'discipline-percent'
+  ).textContent =
+    `${disciplinePercent}%`
+}
