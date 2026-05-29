@@ -1,68 +1,227 @@
 <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
 
-          <div class="ranking-card">
-            <div class="ranking-user">
-              <div class="position">1</div>
+  <title>Projeto Disciplina</title>
 
-              <div>
-                <h4>Lucas Andrade</h4>
-                <p>INABALÁVEL</p>
-              </div>
-            </div>
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  />
 
-            <h3>2480</h3>
-          </div>
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  />
 
-          <div class="ranking-card">
-            <div class="ranking-user">
-              <div class="position">2</div>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  />
 
-              <div>
-                <h4>Pedro Martins</h4>
-                <p>DISCIPLINADO</p>
-              </div>
-            </div>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
 
-            <h3>2310</h3>
-          </div>
+<body>
 
-          <div class="ranking-card">
-            <div class="ranking-user">
-              <div class="position">3</div>
+  <div id="splash-screen">
+    <h1>DISCIPLINA AI</h1>
+  </div>
 
-              <div>
-                <h4>João Victor</h4>
-                <p>GUERREIRO</p>
-              </div>
-            </div>
+  <div class="background-glow"></div>
 
-            <h3>2180</h3>
-          </div>
+  <div class="container">
+
+    <aside class="sidebar">
+
+      <div class="logo-card">
+
+        <div class="logo-box">
+          PD
+        </div>
+
+        <h2>Projeto Disciplina</h2>
+
+        <p>
+          Sistema premium de transformação pessoal.
+        </p>
+
+      </div>
+
+      <nav class="menu">
+
+        <button class="menu-item active">
+          Dashboard
+        </button>
+
+        <button class="menu-item">
+          Missões
+        </button>
+
+        <button class="menu-item">
+          Ranking
+        </button>
+
+        <button class="menu-item">
+          Disciplina AI
+        </button>
+
+      </nav>
+
+    </aside>
+
+    <main class="content">
+
+      <header class="hero">
+
+        <div>
+
+          <span class="tag">
+            MVP PREMIUM
+          </span>
+
+          <h1>
+            Bem-vindo ao Projeto Disciplina
+          </h1>
+
+        </div>
+
+        <div class="hero-card">
+
+          <p>Sequência atual</p>
+
+          <h2>18 dias</h2>
+
+        </div>
+
+      </header>
+
+      <section class="stats-grid">
+
+        <div class="card">
+
+          <span>Pontuação</span>
+
+          <h2 id="xp-total">
+            2480
+          </h2>
+
+          <p>Evolução constante.</p>
+
+        </div>
+
+        <div class="card">
+
+          <span>Nível</span>
+
+          <h2>07</h2>
+
+          <p>Inabalável.</p>
+
+        </div>
+
+        <div class="card">
+
+          <span>Missões</span>
+
+          <h2 id="missions-count">
+            0
+          </h2>
+
+          <p>Concluídas hoje.</p>
+
+        </div>
+
+        <div class="card">
+
+          <span>Mentalidade</span>
+
+          <h2>87%</h2>
+
+          <p>Disciplina elevada.</p>
 
         </div>
 
       </section>
 
-      <section class="pricing-section">
+      <section class="section">
 
-        <span class="tag">USUÁRIO FUNDADOR</span>
+        <div class="section-top">
 
-        <h2>R$14,90</h2>
+          <div>
+
+            <span class="tag">
+              MISSÕES
+            </span>
+
+            <h2>
+              Complete suas missões
+            </h2>
+
+          </div>
+
+          <div class="xp-box">
+
+            <p>XP Diário</p>
+
+            <h3 id="daily-xp">
+              0
+            </h3>
+
+          </div>
+
+        </div>
+
+        <div
+          id="missions-container"
+          class="missions"
+        ></div>
+
+      </section>
+
+      <section class="section ai-box">
+
+        <span class="tag">
+          IA MOTIVACIONAL
+        </span>
+
+        <h2>
+          DISCIPLINA AI
+        </h2>
+
+        <div class="ai-message">
+
+          <p>Mensagem do dia</p>
+
+          <h3 id="ai-message"></h3>
+
+        </div>
+
+      </section>
+
+      <section class="section pricing">
+
+        <span class="tag">
+          USUÁRIO FUNDADOR
+        </span>
+
+        <h2>
+          R$14,90
+        </h2>
 
         <p>
-          Tenha acesso antecipado ao Projeto Disciplina e experimente a prévia oficial do aplicativo.
+          Tenha acesso antecipado ao Projeto Disciplina.
         </p>
 
-        <button class="checkout-btn" id="checkout-btn">
+        <button id="checkout-btn">
           LIBERAR MEU ACESSO
         </button>
-
-        <div class="benefits">
-          <div class="benefit">✓ Acesso imediato</div>
-          <div class="benefit">✓ Garantia de 7 dias</div>
-          <div class="benefit">✓ Usuário fundador</div>
-          <div class="benefit">✓ Atualizações futuras</div>
-        </div>
 
       </section>
 
@@ -70,6 +229,7 @@
 
   </div>
 
-  <script src="script.js"></script>
+  <script src="./script.js"></script>
+
 </body>
 </html>
