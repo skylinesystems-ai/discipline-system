@@ -1,227 +1,441 @@
-const missions = [
+/* =========================================
+   PROJETO DISCIPLINA - SCRIPT COMPLETO
+========================================= */
+
+/* =========================================
+   APP STATE
+========================================= */
+
+const appState = {
+  xp: parseInt(localStorage.getItem('xp')) || 0,
+
+  streak:
+    parseInt(localStorage.getItem('streak')) || 0,
+
+  level:
+    parseInt(localStorage.getItem('level')) || 1,
+
+  completedToday:
+    JSON.parse(
+      localStorage.getItem('completedToday')
+    ) || [],
+
+  completedDays:
+    JSON.parse(
+      localStorage.getItem('completedDays')
+    ) || [],
+
+  trainingMode:
+    localStorage.getItem('trainingMode') ||
+    'gym',
+}
+
+/* =========================================
+   DOM
+========================================= */
+
+const missionsContainer =
+  document.getElementById(
+    'missions-container'
+  )
+
+const xpTotal =
+  document.getElementById('xp-total')
+
+const levelTotal =
+  document.getElementById('level-total')
+
+const dailyXp =
+  document.getElementById('daily-xp')
+
+const streakCount =
+  document.getElementById('streak-count')
+
+const missionsCompleted =
+  document.getElementById(
+    'missions-completed'
+  )
+
+const aiMessage =
+  document.getElementById('ai-message')
+
+const dailyVerse =
+  document.getElementById('daily-verse')
+
+const dailyCardio =
+  document.getElementById('daily-cardio')
+
+const calendarGrid =
+  document.getElementById('calendar-grid')
+
+const gymWorkout =
+  document.getElementById('gym-workout')
+
+const homeWorkout =
+  document.getElementById('home-workout')
+
+const trainingTitle =
+  document.getElementById(
+    'training-title'
+  )
+
+const todayTitle =
+  document.getElementById(
+    'today-title'
+  )
+
+const gymModeBtn =
+  document.getElementById('gym-mode')
+
+const homeModeBtn =
+  document.getElementById('home-mode')
+
+/* =========================================
+   DATE
+========================================= */
+
+const today = new Date()
+
+const currentDay = today.getDay()
+
+const currentDate = today.getDate()
+
+const currentMonth = today.getMonth()
+
+const currentYear = today.getFullYear()
+
+/* =========================================
+   DAYS
+========================================= */
+
+const days = [
+  'Domingo',
+  'Segunda-feira',
+  'Terça-feira',
+  'Quarta-feira',
+  'Quinta-feira',
+  'Sexta-feira',
+  'Sábado',
+]
+
+todayTitle.textContent =
+  days[currentDay]
+
+/* =========================================
+   AI MESSAGES
+========================================= */
+
+const aiMessages = [
+  'Você não precisa sentir vontade. Precisa continuar.',
+
+  'Seu futuro depende do que você faz hoje.',
+
+  'A dor da disciplina pesa menos que a dor do arrependimento.',
+
+  'Controle seus impulsos. Controle sua vida.',
+
+  'Homens fortes são construídos em silêncio.',
+
+  'Disciplina vence motivação.',
+
+  'O homem disciplinado domina a própria mente.',
+]
+
+/* =========================================
+   VERSES
+========================================= */
+
+const verses = [
+  'Filipenses 4:13 — Tudo posso naquele que me fortalece.',
+
+  'Josué 1:9 — Seja forte e corajoso.',
+
+  'Romanos 12:2 — Transformai-vos pela renovação da mente.',
+
+  'Provérbios 3:5 — Confia no Senhor.',
+
+  'Isaías 40:31 — Renovarão suas forças.',
+
+  '2 Timóteo 1:7 — Deus não nos deu espírito de medo.',
+]
+
+/* =========================================
+   CARDIO
+========================================= */
+
+const cardioIdeas = [
+  'Corrida de 5km',
+
+  'Caminhada acelerada',
+
+  'Pular corda 20 minutos',
+
+  'HIIT intenso',
+
+  'Escada por 15 minutos',
+
+  'Bike intensa',
+
+  'Corrida intervalada',
+
+  'Treino funcional',
+]
+
+/* =========================================
+   TRAINING SYSTEM
+========================================= */
+
+const trainingDays = {
+  1: {
+    title: 'Peito + Tríceps',
+
+    gym: [
+      'Supino reto',
+      'Supino inclinado',
+      'Crucifixo',
+      'Crossover',
+      'Tríceps pulley',
+      'Tríceps francês',
+    ],
+
+    home: [
+      'Flexão tradicional',
+      'Flexão inclinada',
+      'Flexão diamante',
+      'Mergulho cadeira',
+      'Tríceps banco',
+      'Flexão lenta',
+    ],
+  },
+
+  2: {
+    title: 'Costas + Bíceps',
+
+    gym: [
+      'Puxada frontal',
+      'Remada baixa',
+      'Remada curvada',
+      'Rosca direta',
+      'Rosca martelo',
+    ],
+
+    home: [
+      'Superman',
+      'Remada mochila',
+      'Barra fixa',
+      'Rosca mochila',
+      'Isometria costas',
+    ],
+  },
+
+  3: {
+    title: 'Pernas Completo',
+
+    gym: [
+      'Agachamento',
+      'Leg press',
+      'Stiff',
+      'Cadeira extensora',
+      'Panturrilha',
+    ],
+
+    home: [
+      'Agachamento livre',
+      'Avanço',
+      'Agachamento isométrico',
+      'Elevação panturrilha',
+      'Afundo',
+    ],
+  },
+
+  4: {
+    title: 'Ombro + Abdômen',
+
+    gym: [
+      'Desenvolvimento',
+      'Elevação lateral',
+      'Elevação frontal',
+      'Abdominal infra',
+      'Prancha',
+    ],
+
+    home: [
+      'Pike push-up',
+      'Elevação lateral mochila',
+      'Prancha',
+      'Abdominal',
+      'Mountain climber',
+    ],
+  },
+
+  5: {
+    title: 'Full Body + Cardio',
+
+    gym: [
+      'Supino',
+      'Agachamento',
+      'Remada',
+      'Desenvolvimento',
+      '20min cardio',
+    ],
+
+    home: [
+      'Flexão',
+      'Agachamento',
+      'Burpee',
+      'Abdominal',
+      'Corrida',
+    ],
+  },
+
+  6: {
+    title: 'Cardio + Mobilidade',
+
+    gym: [
+      'Esteira',
+      'Bike',
+      'Alongamento',
+      'Mobilidade',
+    ],
+
+    home: [
+      'Corrida',
+      'Pular corda',
+      'Alongamento',
+      'Yoga',
+    ],
+  },
+
+  0: {
+    title: 'Descanso + Espiritual',
+
+    gym: [
+      'Alongamento',
+      'Leitura',
+      'Oração',
+    ],
+
+    home: [
+      'Leitura bíblica',
+      'Oração',
+      'Descanso mental',
+    ],
+  },
+}
+
+/* =========================================
+   DAILY MISSIONS
+========================================= */
+
+const dailyMissions = [
   {
     id: 1,
-    title: 'Treino Peito + Tríceps',
-    description:
-      '4 exercícios de peito + 3 de tríceps. Intensidade máxima.',
-    xp: 40,
-  },
-
-  {
-    id: 2,
-    title: 'Treino Costas + Bíceps',
-    description:
-      'Foco em força, postura e resistência.',
-    xp: 40,
-  },
-
-  {
-    id: 3,
-    title: 'Treino Pernas Completo',
-    description:
-      'Agachamento, leg press, stiff e panturrilha.',
+    title: 'Treino completo',
     xp: 50,
   },
 
   {
+    id: 2,
+    title: '2 Litros de água',
+    xp: 20,
+  },
+
+  {
+    id: 3,
+    title: 'Sem pornografia',
+    xp: 80,
+  },
+
+  {
     id: 4,
-    title: 'Treino Ombro + Abdômen',
-    description:
-      'Fortaleça seu core e desenvolva estabilidade.',
-    xp: 35,
+    title: 'Sem refrigerante',
+    xp: 20,
   },
 
   {
     id: 5,
-    title: 'Cardio 30 Minutos',
-    description:
-      'Corrida, bicicleta ou caminhada acelerada.',
+    title: 'Sem doces',
     xp: 25,
   },
 
   {
     id: 6,
-    title: 'HIIT Explosivo',
-    description:
-      '20 minutos de treino intenso sem pausas longas.',
-    xp: 35,
+    title: 'Leitura bíblica',
+    xp: 30,
   },
 
   {
     id: 7,
-    title: '2 Litros de Água',
-    description:
-      'Hidratação é disciplina.',
-    xp: 15,
+    title: '10 minutos oração',
+    xp: 30,
   },
 
   {
     id: 8,
-    title: 'Dormir Antes das 23h',
-    description:
-      'Recuperação física e mental.',
-    xp: 20,
+    title: 'Dormir antes das 23h',
+    xp: 25,
   },
 
   {
     id: 9,
-    title: 'Sem Pornografia',
-    description:
-      'Controle mental e pureza.',
-    xp: 60,
+    title: 'Sem procrastinar',
+    xp: 35,
   },
 
   {
     id: 10,
-    title: 'Sem Refrigerante',
-    description:
-      'Evite açúcar líquido e hábitos destrutivos.',
-    xp: 20,
-  },
-
-  {
-    id: 11,
-    title: 'Sem Doces',
-    description:
-      'Controle seus impulsos.',
-    xp: 25,
-  },
-
-  {
-    id: 12,
-    title: 'Sem Fast Food',
-    description:
-      'Coma comida de verdade.',
-    xp: 25,
-  },
-
-  {
-    id: 13,
-    title: 'Leitura Bíblica',
-    description:
-      'Leia um versículo e reflita.',
-    xp: 20,
-  },
-
-  {
-    id: 14,
-    title: '10 Minutos de Oração',
-    description:
-      'Fortaleça sua mente e espírito.',
-    xp: 20,
-  },
-
-  {
-    id: 15,
-    title: 'Sem Reclamar',
-    description:
-      'Controle emocional e mentalidade forte.',
-    xp: 30,
-  },
-
-  {
-    id: 16,
-    title: 'Arrumar o Quarto',
-    description:
-      'Ambiente organizado, mente organizada.',
-    xp: 15,
-  },
-
-  {
-    id: 17,
-    title: 'Estudar 1 Hora',
-    description:
-      'Construa conhecimento todos os dias.',
-    xp: 30,
-  },
-
-  {
-    id: 18,
-    title: 'Desligar Redes Sociais por 2h',
-    description:
-      'Foque na vida real.',
-    xp: 20,
-  },
-
-  {
-    id: 19,
-    title: 'Alongamento Completo',
-    description:
-      'Mobilidade e prevenção de lesões.',
-    xp: 15,
-  },
-
-  {
-    id: 20,
-    title: 'Acordar Sem Soneca',
-    description:
-      'Vença a primeira batalha do dia.',
-    xp: 20,
+    title: 'Cardio do dia',
+    xp: 35,
   },
 ]
 
-const verses = [
-  'Filipenses 4:13 — Tudo posso naquele que me fortalece.',
-  'Josué 1:9 — Seja forte e corajoso.',
-  'Provérbios 3:5 — Confia no Senhor de todo o teu coração.',
-  'Romanos 12:2 — Transformai-vos pela renovação da mente.',
-  'Salmos 37:5 — Entrega o teu caminho ao Senhor.',
-  '2 Timóteo 1:7 — Deus não nos deu espírito de medo.',
-  'Mateus 19:26 — Para Deus tudo é possível.',
-  'Isaías 40:31 — Os que esperam no Senhor renovarão as forças.',
-]
+/* =========================================
+   RENDER TRAINING
+========================================= */
 
-const cardioIdeas = [
-  'Corrida de 5km',
-  'Caminhada acelerada',
-  'Pular corda por 20 minutos',
-  'HIIT em casa',
-  'Escada por 15 minutos',
-  'Bike intensa',
-  'Corrida intervalada',
-  'Treino funcional',
-]
+function renderTraining() {
+  const training =
+    trainingDays[currentDay]
 
-const aiMessages = [
-  'Você não precisa sentir vontade. Precisa continuar.',
-  'Disciplina é fazer mesmo sem motivação.',
-  'O homem disciplinado vence no silêncio.',
-  'Seu futuro depende do que você faz hoje.',
-  'A dor da disciplina pesa menos que a dor do arrependimento.',
-  'Seu corpo aguenta muito mais do que sua mente acredita.',
-  'Quem domina os desejos domina a própria vida.',
-  'Sacrifício hoje. Vitória amanhã.',
-]
+  trainingTitle.textContent =
+    training.title
 
-const missionsContainer =
-  document.getElementById('missions-container')
+  gymWorkout.innerHTML = ''
 
-const missionsCount =
-  document.getElementById('missions-count')
+  homeWorkout.innerHTML = ''
 
-const dailyXp =
-  document.getElementById('daily-xp')
+  training.gym.forEach((exercise) => {
+    const li =
+      document.createElement('li')
 
-const xpTotal =
-  document.getElementById('xp-total')
+    li.textContent = `✓ ${exercise}`
 
-const aiMessage =
-  document.getElementById('ai-message')
+    gymWorkout.appendChild(li)
+  })
 
-const checkoutBtn =
-  document.getElementById('checkout-btn')
+  training.home.forEach((exercise) => {
+    const li =
+      document.createElement('li')
 
-let completedMissions =
-  JSON.parse(
-    localStorage.getItem('completedMissions')
-  ) || []
+    li.textContent = `✓ ${exercise}`
+
+    homeWorkout.appendChild(li)
+  })
+}
+
+/* =========================================
+   RENDER MISSIONS
+========================================= */
 
 function renderMissions() {
   missionsContainer.innerHTML = ''
 
-  missions.forEach((mission) => {
+  dailyMissions.forEach((mission) => {
+
     const completed =
-      completedMissions.includes(mission.id)
+      appState.completedToday.includes(
+        mission.id
+      )
 
     const card =
       document.createElement('div')
@@ -234,11 +448,19 @@ function renderMissions() {
 
     card.innerHTML = `
       <div class="mission-info">
-        <h3>${mission.title}</h3>
 
-        <p>${mission.description}</p>
+        <h3>
+          ${mission.title}
+        </h3>
 
-        <span>+${mission.xp} XP</span>
+        <p>
+          Complete essa missão hoje.
+        </p>
+
+        <span>
+          +${mission.xp} XP
+        </span>
+
       </div>
 
       <div class="mission-check">
@@ -246,9 +468,10 @@ function renderMissions() {
       </div>
     `
 
-    card.addEventListener('click', () => {
-      toggleMission(mission.id)
-    })
+    card.addEventListener(
+      'click',
+      () => toggleMission(mission.id)
+    )
 
     missionsContainer.appendChild(card)
   })
@@ -256,46 +479,118 @@ function renderMissions() {
   updateStats()
 }
 
+/* =========================================
+   TOGGLE MISSIONS
+========================================= */
+
 function toggleMission(id) {
-  if (completedMissions.includes(id)) {
-    completedMissions =
-      completedMissions.filter(
-        (missionId) => missionId !== id
+
+  if (
+    appState.completedToday.includes(id)
+  ) {
+
+    appState.completedToday =
+      appState.completedToday.filter(
+        (missionId) =>
+          missionId !== id
       )
+
   } else {
-    completedMissions.push(id)
+
+    appState.completedToday.push(id)
   }
 
   localStorage.setItem(
-    'completedMissions',
-    JSON.stringify(completedMissions)
+    'completedToday',
+    JSON.stringify(
+      appState.completedToday
+    )
   )
+
+  calculateXP()
 
   renderMissions()
 }
 
-function updateStats() {
-  missionsCount.textContent =
-    completedMissions.length
+/* =========================================
+   XP SYSTEM
+========================================= */
 
-  const totalXp = missions
-    .filter((mission) =>
-      completedMissions.includes(mission.id)
-    )
-    .reduce(
-      (accumulator, mission) =>
-        accumulator + mission.xp,
-      0
-    )
+function calculateXP() {
 
-  dailyXp.textContent = totalXp
+  let totalXP = 0
+
+  dailyMissions.forEach((mission) => {
+
+    if (
+      appState.completedToday.includes(
+        mission.id
+      )
+    ) {
+
+      totalXP += mission.xp
+    }
+  })
+
+  dailyXp.textContent = totalXP
+
+  appState.xp = totalXP
 
   xpTotal.textContent =
-    2480 + totalXp
+    appState.xp
+
+  localStorage.setItem(
+    'xp',
+    appState.xp
+  )
+
+  calculateLevel()
 }
 
-function generateAIMessage() {
-  const random =
+/* =========================================
+   LEVEL SYSTEM
+========================================= */
+
+function calculateLevel() {
+
+  const level =
+    Math.floor(
+      appState.xp / 300
+    ) + 1
+
+  appState.level = level
+
+  levelTotal.textContent =
+    level
+
+  document.getElementById(
+    'user-level'
+  ).textContent =
+    `Nível ${level}`
+
+  localStorage.setItem(
+    'level',
+    level
+  )
+}
+
+/* =========================================
+   STREAK SYSTEM
+========================================= */
+
+function updateStreak() {
+
+  streakCount.textContent =
+    `${appState.streak} dias`
+}
+
+/* =========================================
+   DAILY CONTENT
+========================================= */
+
+function generateDailyContent() {
+
+  const randomAI =
     aiMessages[
       Math.floor(
         Math.random() *
@@ -303,14 +598,8 @@ function generateAIMessage() {
       )
     ]
 
-  aiMessage.textContent = random
-}
-
-function generateVerse() {
-  const verseBox =
-    document.createElement('div')
-
-  verseBox.classList.add('extra-box')
+  aiMessage.textContent =
+    randomAI
 
   const randomVerse =
     verses[
@@ -320,21 +609,8 @@ function generateVerse() {
       )
     ]
 
-  verseBox.innerHTML = `
-    <h3>Versículo do Dia</h3>
-
-    <p>${randomVerse}</p>
-  `
-
-  document.querySelector('.content')
-    .appendChild(verseBox)
-}
-
-function generateCardioIdea() {
-  const cardioBox =
-    document.createElement('div')
-
-  cardioBox.classList.add('extra-box')
+  dailyVerse.textContent =
+    randomVerse
 
   const randomCardio =
     cardioIdeas[
@@ -344,28 +620,145 @@ function generateCardioIdea() {
       )
     ]
 
-  cardioBox.innerHTML = `
-    <h3>Cardio Sugerido</h3>
-
-    <p>${randomCardio}</p>
-  `
-
-  document.querySelector('.content')
-    .appendChild(cardioBox)
+  dailyCardio.textContent =
+    randomCardio
 }
 
-checkoutBtn.addEventListener(
+/* =========================================
+   CALENDAR
+========================================= */
+
+function renderCalendar() {
+
+  calendarGrid.innerHTML = ''
+
+  const totalDays = 31
+
+  for (
+    let i = 1;
+    i <= totalDays;
+    i++
+  ) {
+
+    const day =
+      document.createElement('div')
+
+    day.classList.add(
+      'calendar-day'
+    )
+
+    if (i === currentDate) {
+      day.classList.add('today')
+    }
+
+    if (
+      appState.completedDays.includes(i)
+    ) {
+      day.classList.add(
+        'completed'
+      )
+    }
+
+    day.textContent = i
+
+    calendarGrid.appendChild(day)
+  }
+}
+
+/* =========================================
+   MODE SYSTEM
+========================================= */
+
+gymModeBtn.addEventListener(
   'click',
   () => {
-    window.location.href =
-      'https://pay.kiwify.com.br/SEU-LINK'
+
+    appState.trainingMode =
+      'gym'
+
+    gymModeBtn.classList.add(
+      'active'
+    )
+
+    homeModeBtn.classList.remove(
+      'active'
+    )
+
+    localStorage.setItem(
+      'trainingMode',
+      'gym'
+    )
   }
 )
 
-renderMissions()
+homeModeBtn.addEventListener(
+  'click',
+  () => {
 
-generateAIMessage()
+    appState.trainingMode =
+      'home'
 
-generateVerse()
+    homeModeBtn.classList.add(
+      'active'
+    )
 
-generateCardioIdea()
+    gymModeBtn.classList.remove(
+      'active'
+    )
+
+    localStorage.setItem(
+      'trainingMode',
+      'home'
+    )
+  }
+)
+
+/* =========================================
+   MISSIONS COUNT
+========================================= */
+
+function updateMissionCount() {
+
+  missionsCompleted.textContent =
+    appState.completedToday.length
+}
+
+/* =========================================
+   CHECKOUT
+========================================= */
+
+document
+  .getElementById(
+    'checkout-btn'
+  )
+  .addEventListener(
+    'click',
+    () => {
+
+      window.location.href =
+        'https://pay.kiwify.com.br/SEU-LINK'
+    }
+  )
+
+/* =========================================
+   INIT
+========================================= */
+
+function init() {
+
+  renderTraining()
+
+  renderMissions()
+
+  generateDailyContent()
+
+  renderCalendar()
+
+  updateMissionCount()
+
+  updateStreak()
+
+  calculateXP()
+}
+
+init()
