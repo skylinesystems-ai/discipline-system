@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
+
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
@@ -25,18 +27,41 @@
     rel="stylesheet"
   />
 
-  <link rel="stylesheet" href="./styles.css" />
+  <link
+    rel="stylesheet"
+    href="./styles.css"
+  />
 </head>
 
 <body>
 
+  <!-- SPLASH -->
+
   <div id="splash-screen">
-    <h1>DISCIPLINA AI</h1>
+
+    <div class="splash-content">
+
+      <h1>
+        DISCIPLINA AI
+      </h1>
+
+      <p>
+        Inicializando sistema...
+      </p>
+
+    </div>
+
   </div>
+
+  <!-- BACKGROUND -->
 
   <div class="background-glow"></div>
 
-  <div class="container">
+  <!-- APP -->
+
+  <div class="app-layout">
+
+    <!-- SIDEBAR -->
 
     <aside class="sidebar">
 
@@ -46,13 +71,39 @@
           PD
         </div>
 
-        <h2>Projeto Disciplina</h2>
+        <h2>
+          Projeto Disciplina
+        </h2>
 
         <p>
-          Sistema premium de transformação pessoal.
+          Sistema premium de evolução pessoal.
         </p>
 
       </div>
+
+      <!-- USER -->
+
+      <div class="user-card">
+
+        <div class="user-avatar">
+          ⚡
+        </div>
+
+        <div>
+
+          <h3 id="user-level">
+            Nível 1
+          </h3>
+
+          <p id="user-rank">
+            Recruta
+          </p>
+
+        </div>
+
+      </div>
+
+      <!-- MENU -->
 
       <nav class="menu">
 
@@ -61,11 +112,19 @@
         </button>
 
         <button class="menu-item">
+          Calendário
+        </button>
+
+        <button class="menu-item">
           Missões
         </button>
 
         <button class="menu-item">
-          Ranking
+          Progresso
+        </button>
+
+        <button class="menu-item">
+          Badges
         </button>
 
         <button class="menu-item">
@@ -74,9 +133,55 @@
 
       </nav>
 
+      <!-- TRAINING MODE -->
+
+      <div class="training-mode">
+
+        <span>
+          MODO DE TREINO
+        </span>
+
+        <div class="mode-buttons">
+
+          <button
+            class="mode-btn active"
+            id="gym-mode"
+          >
+            Academia
+          </button>
+
+          <button
+            class="mode-btn"
+            id="home-mode"
+          >
+            Casa
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- STREAK -->
+
+      <div class="streak-card">
+
+        <p>
+          🔥 Sequência Atual
+        </p>
+
+        <h2 id="streak-count">
+          0 dias
+        </h2>
+
+      </div>
+
     </aside>
 
-    <main class="content">
+    <!-- MAIN -->
+
+    <main class="main-content">
+
+      <!-- HERO -->
 
       <header class="hero">
 
@@ -90,85 +195,65 @@
             Bem-vindo ao Projeto Disciplina
           </h1>
 
+          <p>
+            Evolua sua mente, corpo e disciplina diariamente.
+          </p>
+
         </div>
 
-        <div class="hero-card">
+        <div class="hero-right">
 
-          <p>Sequência atual</p>
+          <div class="hero-box">
 
-          <h2>18 dias</h2>
+            <span>
+              XP TOTAL
+            </span>
+
+            <h2 id="xp-total">
+              0
+            </h2>
+
+          </div>
+
+          <div class="hero-box">
+
+            <span>
+              NÍVEL
+            </span>
+
+            <h2 id="level-total">
+              1
+            </h2>
+
+          </div>
 
         </div>
 
       </header>
 
-      <section class="stats-grid">
+      <!-- PROGRESS -->
 
-        <div class="card">
-
-          <span>Pontuação</span>
-
-          <h2 id="xp-total">
-            2480
-          </h2>
-
-          <p>Evolução constante.</p>
-
-        </div>
-
-        <div class="card">
-
-          <span>Nível</span>
-
-          <h2>07</h2>
-
-          <p>Inabalável.</p>
-
-        </div>
-
-        <div class="card">
-
-          <span>Missões</span>
-
-          <h2 id="missions-count">
-            0
-          </h2>
-
-          <p>Concluídas hoje.</p>
-
-        </div>
-
-        <div class="card">
-
-          <span>Mentalidade</span>
-
-          <h2>87%</h2>
-
-          <p>Disciplina elevada.</p>
-
-        </div>
-
-      </section>
-
-      <section class="section">
+      <section class="progress-section">
 
         <div class="section-top">
 
           <div>
 
             <span class="tag">
-              MISSÕES
+              EVOLUÇÃO
             </span>
 
             <h2>
-              Complete suas missões
+              Seu progresso
             </h2>
 
           </div>
 
-          <div class="xp-box">
+          <div class="xp-daily">
 
-            <p>XP Diário</p>
+            <p>
+              XP Diário
+            </p>
 
             <h3 id="daily-xp">
               0
@@ -178,34 +263,389 @@
 
         </div>
 
-        <div
-          id="missions-container"
-          class="missions"
-        ></div>
+        <!-- PROGRESS BARS -->
 
-      </section>
+        <div class="progress-grid">
 
-      <section class="section ai-box">
+          <div class="progress-card">
 
-        <span class="tag">
-          IA MOTIVACIONAL
-        </span>
+            <div class="progress-title">
 
-        <h2>
-          DISCIPLINA AI
-        </h2>
+              <span>
+                Disciplina
+              </span>
 
-        <div class="ai-message">
+              <strong id="discipline-percent">
+                76%
+              </strong>
 
-          <p>Mensagem do dia</p>
+            </div>
 
-          <h3 id="ai-message"></h3>
+            <div class="progress-bar">
+
+              <div
+                class="progress-fill discipline-fill"
+              ></div>
+
+            </div>
+
+          </div>
+
+          <div class="progress-card">
+
+            <div class="progress-title">
+
+              <span>
+                Mentalidade
+              </span>
+
+              <strong>
+                82%
+              </strong>
+
+            </div>
+
+            <div class="progress-bar">
+
+              <div
+                class="progress-fill mentality-fill"
+              ></div>
+
+            </div>
+
+          </div>
+
+          <div class="progress-card">
+
+            <div class="progress-title">
+
+              <span>
+                Espiritual
+              </span>
+
+              <strong>
+                68%
+              </strong>
+
+            </div>
+
+            <div class="progress-bar">
+
+              <div
+                class="progress-fill spiritual-fill"
+              ></div>
+
+            </div>
+
+          </div>
 
         </div>
 
       </section>
 
-      <section class="section pricing">
+      <!-- CALENDAR -->
+
+      <section class="calendar-section">
+
+        <div class="section-top">
+
+          <div>
+
+            <span class="tag">
+              CALENDÁRIO
+            </span>
+
+            <h2>
+              Evolução mensal
+            </h2>
+
+          </div>
+
+          <div class="calendar-month">
+
+            Julho 2026
+
+          </div>
+
+        </div>
+
+        <!-- WEEK -->
+
+        <div class="week-days">
+
+          <span>DOM</span>
+          <span>SEG</span>
+          <span>TER</span>
+          <span>QUA</span>
+          <span>QUI</span>
+          <span>SEX</span>
+          <span>SAB</span>
+
+        </div>
+
+        <!-- DAYS -->
+
+        <div
+          class="calendar-grid"
+          id="calendar-grid"
+        >
+
+          <!-- JS -->
+
+        </div>
+
+      </section>
+
+      <!-- DAILY MISSIONS -->
+
+      <section class="missions-section">
+
+        <div class="section-top">
+
+          <div>
+
+            <span class="tag">
+              MISSÕES DO DIA
+            </span>
+
+            <h2 id="today-title">
+              Segunda-feira
+            </h2>
+
+          </div>
+
+          <div class="daily-complete">
+
+            <p>
+              Concluídas
+            </p>
+
+            <h3 id="missions-completed">
+              0
+            </h3>
+
+          </div>
+
+        </div>
+
+        <!-- DAILY TRAIN -->
+
+        <div class="daily-training">
+
+          <div class="training-header">
+
+            <div>
+
+              <span>
+                TREINO DO DIA
+              </span>
+
+              <h3 id="training-title">
+                Peito + Tríceps
+              </h3>
+
+            </div>
+
+            <div class="training-badge">
+
+              Inteligente
+
+            </div>
+
+          </div>
+
+          <!-- ACADEMIA -->
+
+          <div class="training-columns">
+
+            <div class="training-card">
+
+              <h4>
+                Academia
+              </h4>
+
+              <ul id="gym-workout">
+
+                <!-- JS -->
+
+              </ul>
+
+            </div>
+
+            <div class="training-card">
+
+              <h4>
+                Casa
+              </h4>
+
+              <ul id="home-workout">
+
+                <!-- JS -->
+
+              </ul>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- MISSIONS -->
+
+        <div
+          class="missions-grid"
+          id="missions-container"
+        >
+
+          <!-- JS -->
+
+        </div>
+
+      </section>
+
+      <!-- DAILY CONTENT -->
+
+      <section class="daily-content-grid">
+
+        <!-- VERSE -->
+
+        <div class="content-card">
+
+          <span class="tag">
+            VERSÍCULO
+          </span>
+
+          <h2>
+            Palavra do Dia
+          </h2>
+
+          <p id="daily-verse">
+
+            Filipenses 4:13
+
+          </p>
+
+        </div>
+
+        <!-- CARDIO -->
+
+        <div class="content-card">
+
+          <span class="tag">
+            CARDIO
+          </span>
+
+          <h2>
+            Cardio sugerido
+          </h2>
+
+          <p id="daily-cardio">
+
+            Corrida de 5km
+
+          </p>
+
+        </div>
+
+        <!-- AI -->
+
+        <div class="content-card ai-card">
+
+          <span class="tag">
+            IA MOTIVACIONAL
+          </span>
+
+          <h2>
+            DISCIPLINA AI
+          </h2>
+
+          <p id="ai-message">
+
+            Você não precisa sentir vontade. Precisa continuar.
+
+          </p>
+
+        </div>
+
+      </section>
+
+      <!-- BADGES -->
+
+      <section class="badges-section">
+
+        <div class="section-top">
+
+          <div>
+
+            <span class="tag">
+              BADGES
+            </span>
+
+            <h2>
+              Conquistas desbloqueadas
+            </h2>
+
+          </div>
+
+        </div>
+
+        <div class="badges-grid">
+
+          <div class="badge-card unlocked">
+
+            <div class="badge-icon">
+              🔥
+            </div>
+
+            <h3>
+              DISCIPLINADO
+            </h3>
+
+            <p>
+              7 dias seguidos
+            </p>
+
+          </div>
+
+          <div class="badge-card locked">
+
+            <div class="badge-icon">
+              ⚔️
+            </div>
+
+            <h3>
+              GUERREIRO
+            </h3>
+
+            <p>
+              30 dias seguidos
+            </p>
+
+          </div>
+
+          <div class="badge-card locked">
+
+            <div class="badge-icon">
+              👑
+            </div>
+
+            <h3>
+              LENDA
+            </h3>
+
+            <p>
+              365 dias seguidos
+            </p>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- PRICING -->
+
+      <section class="pricing-section">
 
         <span class="tag">
           USUÁRIO FUNDADOR
@@ -216,12 +656,34 @@
         </h2>
 
         <p>
-          Tenha acesso antecipado ao Projeto Disciplina.
+          Tenha acesso antecipado ao Projeto Disciplina e participe da evolução do aplicativo oficial.
         </p>
 
         <button id="checkout-btn">
+
           LIBERAR MEU ACESSO
+
         </button>
+
+        <div class="pricing-benefits">
+
+          <div class="benefit">
+            ✓ Sistema completo
+          </div>
+
+          <div class="benefit">
+            ✓ Atualizações futuras
+          </div>
+
+          <div class="benefit">
+            ✓ Garantia de 7 dias
+          </div>
+
+          <div class="benefit">
+            ✓ Usuário fundador
+          </div>
+
+        </div>
 
       </section>
 
@@ -232,4 +694,5 @@
   <script src="./script.js"></script>
 
 </body>
+
 </html>
