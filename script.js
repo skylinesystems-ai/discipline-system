@@ -594,9 +594,19 @@ function updateProgressBars() {
     `${spiritual}%`
 
   document.getElementById(
-    'discipline-percent'
-  ).textContent =
-    `${discipline}%`
+  'discipline-percent'
+).textContent =
+  `${discipline}%`
+
+document.getElementById(
+  'mindset-percent'
+).textContent =
+  `${mindset}%`
+
+document.getElementById(
+  'spiritual-percent'
+).textContent =
+  `${spiritual}%`
 }
 
 /* =========================================
