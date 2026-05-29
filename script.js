@@ -1,19 +1,28 @@
 /* =========================================
-   PROJETO DISCIPLINA - SCRIPT COMPLETO
+   PROJETO DISCIPLINA - SCRIPT PROFISSIONAL
 ========================================= */
+
+/* =========================================
+   STORAGE
+========================================= */
+
+const today = new Date()
+
+const todayKey = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`
 
 /* =========================================
    APP STATE
 ========================================= */
 
 const appState = {
-  xp: parseInt(localStorage.getItem('xp')) || 0,
-
-  streak:
-    parseInt(localStorage.getItem('streak')) || 0,
+  xp:
+    parseInt(localStorage.getItem('xp')) || 0,
 
   level:
     parseInt(localStorage.getItem('level')) || 1,
+
+  streak:
+    parseInt(localStorage.getItem('streak')) || 0,
 
   completedToday:
     JSON.parse(
@@ -28,7 +37,37 @@ const appState = {
   trainingMode:
     localStorage.getItem('trainingMode') ||
     'gym',
+
+  lastAccess:
+    localStorage.getItem('lastAccess') ||
+    todayKey,
 }
+
+/* =========================================
+   DAILY RESET
+========================================= */
+
+function checkNewDay() {
+
+  if (appState.lastAccess !== todayKey) {
+
+    appState.completedToday = []
+
+    localStorage.setItem(
+      'completedToday',
+      JSON.stringify([])
+    )
+
+    appState.lastAccess = todayKey
+
+    localStorage.setItem(
+      'lastAccess',
+      todayKey
+    )
+  }
+}
+
+checkNewDay()
 
 /* =========================================
    DOM
@@ -91,10 +130,8 @@ const homeModeBtn =
   document.getElementById('home-mode')
 
 /* =========================================
-   DATE
+   DAYS
 ========================================= */
-
-const today = new Date()
 
 const currentDay = today.getDay()
 
@@ -103,10 +140,6 @@ const currentDate = today.getDate()
 const currentMonth = today.getMonth()
 
 const currentYear = today.getFullYear()
-
-/* =========================================
-   DAYS
-========================================= */
 
 const days = [
   'Domingo',
@@ -122,67 +155,33 @@ todayTitle.textContent =
   days[currentDay]
 
 /* =========================================
-   AI MESSAGES
+   MOTIVATION
 ========================================= */
 
 const aiMessages = [
   'Você não precisa sentir vontade. Precisa continuar.',
-
   'Seu futuro depende do que você faz hoje.',
-
-  'A dor da disciplina pesa menos que a dor do arrependimento.',
-
-  'Controle seus impulsos. Controle sua vida.',
-
-  'Homens fortes são construídos em silêncio.',
-
   'Disciplina vence motivação.',
-
-  'O homem disciplinado domina a própria mente.',
+  'Controle seus impulsos.',
+  'Homens fortes são construídos em silêncio.',
 ]
-
-/* =========================================
-   VERSES
-========================================= */
 
 const verses = [
-  'Filipenses 4:13 — Tudo posso naquele que me fortalece.',
-
-  'Josué 1:9 — Seja forte e corajoso.',
-
-  'Romanos 12:2 — Transformai-vos pela renovação da mente.',
-
-  'Provérbios 3:5 — Confia no Senhor.',
-
-  'Isaías 40:31 — Renovarão suas forças.',
-
-  '2 Timóteo 1:7 — Deus não nos deu espírito de medo.',
+  'Filipenses 4:13',
+  'Josué 1:9',
+  'Romanos 12:2',
+  'Provérbios 3:5',
 ]
-
-/* =========================================
-   CARDIO
-========================================= */
 
 const cardioIdeas = [
-  'Corrida de 5km',
-
-  'Caminhada acelerada',
-
-  'Pular corda 20 minutos',
-
-  'HIIT intenso',
-
-  'Escada por 15 minutos',
-
+  'Corrida 5km',
   'Bike intensa',
-
-  'Corrida intervalada',
-
-  'Treino funcional',
+  'HIIT 20min',
+  'Pular corda',
 ]
 
 /* =========================================
-   TRAINING SYSTEM
+   TRAINING
 ========================================= */
 
 const trainingDays = {
@@ -192,19 +191,13 @@ const trainingDays = {
     gym: [
       'Supino reto',
       'Supino inclinado',
-      'Crucifixo',
       'Crossover',
-      'Tríceps pulley',
-      'Tríceps francês',
     ],
 
     home: [
-      'Flexão tradicional',
-      'Flexão inclinada',
+      'Flexão',
       'Flexão diamante',
       'Mergulho cadeira',
-      'Tríceps banco',
-      'Flexão lenta',
     ],
   },
 
@@ -212,39 +205,31 @@ const trainingDays = {
     title: 'Costas + Bíceps',
 
     gym: [
-      'Puxada frontal',
-      'Remada baixa',
-      'Remada curvada',
+      'Remada',
+      'Puxada',
       'Rosca direta',
-      'Rosca martelo',
     ],
 
     home: [
-      'Superman',
-      'Remada mochila',
       'Barra fixa',
+      'Remada mochila',
       'Rosca mochila',
-      'Isometria costas',
     ],
   },
 
   3: {
-    title: 'Pernas Completo',
+    title: 'Pernas',
 
     gym: [
       'Agachamento',
       'Leg press',
-      'Stiff',
-      'Cadeira extensora',
       'Panturrilha',
     ],
 
     home: [
       'Agachamento livre',
-      'Avanço',
-      'Agachamento isométrico',
-      'Elevação panturrilha',
       'Afundo',
+      'Panturrilha',
     ],
   },
 
@@ -254,36 +239,28 @@ const trainingDays = {
     gym: [
       'Desenvolvimento',
       'Elevação lateral',
-      'Elevação frontal',
-      'Abdominal infra',
       'Prancha',
     ],
 
     home: [
       'Pike push-up',
-      'Elevação lateral mochila',
-      'Prancha',
       'Abdominal',
-      'Mountain climber',
+      'Prancha',
     ],
   },
 
   5: {
-    title: 'Full Body + Cardio',
+    title: 'Full Body',
 
     gym: [
       'Supino',
       'Agachamento',
       'Remada',
-      'Desenvolvimento',
-      '20min cardio',
     ],
 
     home: [
       'Flexão',
-      'Agachamento',
       'Burpee',
-      'Abdominal',
       'Corrida',
     ],
   },
@@ -295,14 +272,12 @@ const trainingDays = {
       'Esteira',
       'Bike',
       'Alongamento',
-      'Mobilidade',
     ],
 
     home: [
       'Corrida',
-      'Pular corda',
+      'Corda',
       'Alongamento',
-      'Yoga',
     ],
   },
 
@@ -310,7 +285,6 @@ const trainingDays = {
     title: 'Descanso + Espiritual',
 
     gym: [
-      'Alongamento',
       'Leitura',
       'Oração',
     ],
@@ -318,13 +292,12 @@ const trainingDays = {
     home: [
       'Leitura bíblica',
       'Oração',
-      'Descanso mental',
     ],
   },
 }
 
 /* =========================================
-   DAILY MISSIONS
+   MISSIONS
 ========================================= */
 
 const dailyMissions = [
@@ -337,72 +310,39 @@ const dailyMissions = [
 
   {
     id: 2,
-    title: '2 Litros de água',
-    xp: 20,
-    category: 'discipline',
-  },
-
-  {
-    id: 3,
     title: 'Sem pornografia',
     xp: 80,
     category: 'mindset',
   },
 
   {
-    id: 4,
-    title: 'Sem refrigerante',
-    xp: 20,
-    category: 'mindset',
-  },
-
-  {
-    id: 5,
-    title: 'Sem doces',
-    xp: 25,
-    category: 'mindset',
-  },
-
-  {
-    id: 6,
+    id: 3,
     title: 'Leitura bíblica',
     xp: 30,
     category: 'spiritual',
   },
 
   {
-    id: 7,
-    title: '10 minutos oração',
+    id: 4,
+    title: 'Cardio',
     xp: 30,
-    category: 'spiritual',
-  },
-
-  {
-    id: 8,
-    title: 'Dormir antes das 23h',
-    xp: 25,
     category: 'discipline',
   },
 
   {
-    id: 9,
-    title: 'Sem procrastinar',
-    xp: 35,
-    category: 'discipline',
-  },
-
-  {
-    id: 10,
-    title: 'Cardio do dia',
-    xp: 35,
-    category: 'discipline',
+    id: 5,
+    title: 'Sem refrigerante',
+    xp: 20,
+    category: 'mindset',
   },
 ]
+
 /* =========================================
-   RENDER TRAINING
+   TRAINING RENDER
 ========================================= */
 
 function renderTraining() {
+
   const training =
     trainingDays[currentDay]
 
@@ -413,30 +353,33 @@ function renderTraining() {
 
   homeWorkout.innerHTML = ''
 
-  training.gym.forEach((exercise) => {
+  training.gym.forEach((item) => {
+
     const li =
       document.createElement('li')
 
-    li.textContent = `✓ ${exercise}`
+    li.textContent = `✓ ${item}`
 
     gymWorkout.appendChild(li)
   })
 
-  training.home.forEach((exercise) => {
+  training.home.forEach((item) => {
+
     const li =
       document.createElement('li')
 
-    li.textContent = `✓ ${exercise}`
+    li.textContent = `✓ ${item}`
 
     homeWorkout.appendChild(li)
   })
 }
 
 /* =========================================
-   RENDER MISSIONS
+   MISSIONS RENDER
 ========================================= */
 
 function renderMissions() {
+
   missionsContainer.innerHTML = ''
 
   dailyMissions.forEach((mission) => {
@@ -449,18 +392,15 @@ function renderMissions() {
     const card =
       document.createElement('div')
 
-    card.classList.add('mission-card')
-
-    if (completed) {
-      card.classList.add('completed')
-    }
+    card.className =
+      `mission-card ${
+        completed ? 'completed' : ''
+      }`
 
     card.innerHTML = `
       <div class="mission-info">
 
-        <h3>
-          ${mission.title}
-        </h3>
+        <h3>${mission.title}</h3>
 
         <p>
           Complete essa missão hoje.
@@ -485,7 +425,7 @@ function renderMissions() {
     missionsContainer.appendChild(card)
   })
 
-  updateStats()
+  updateMissionCount()
 }
 
 /* =========================================
@@ -494,9 +434,10 @@ function renderMissions() {
 
 function toggleMission(id) {
 
-  if (
+  const alreadyCompleted =
     appState.completedToday.includes(id)
-  ) {
+
+  if (alreadyCompleted) {
 
     appState.completedToday =
       appState.completedToday.filter(
@@ -516,19 +457,24 @@ function toggleMission(id) {
     )
   )
 
-  calculateXP()
-   updateProgressBars()
+  updateXP()
+
+  updateProgressBars()
+
+  updateMissionCount()
+
+  checkCompletedDay()
 
   renderMissions()
 }
 
 /* =========================================
-   XP SYSTEM
+   XP
 ========================================= */
 
-function calculateXP() {
+function updateXP() {
 
-  let totalXP = 0
+  let total = 0
 
   dailyMissions.forEach((mission) => {
 
@@ -538,289 +484,40 @@ function calculateXP() {
       )
     ) {
 
-      totalXP += mission.xp
+      total += mission.xp
     }
   })
 
-  dailyXp.textContent = totalXP
-
-  appState.xp = totalXP
+  dailyXp.textContent = total
 
   xpTotal.textContent =
-    appState.xp
-
-  localStorage.setItem(
-    'xp',
-    appState.xp
-  )
+    appState.xp + total
 
   calculateLevel()
 }
 
 /* =========================================
-   LEVEL SYSTEM
+   LEVEL
 ========================================= */
 
 function calculateLevel() {
 
+  const currentXP =
+    parseInt(xpTotal.textContent)
+
   const level =
-    Math.floor(
-      appState.xp / 300
-    ) + 1
+    Math.floor(currentXP / 300) + 1
 
-  appState.level = level
-
-  levelTotal.textContent =
-    level
+  levelTotal.textContent = level
 
   document.getElementById(
     'user-level'
   ).textContent =
     `Nível ${level}`
-
-  localStorage.setItem(
-    'level',
-    level
-  )
 }
 
 /* =========================================
-   STREAK SYSTEM
-========================================= */
-
-function updateStreak() {
-
-  streakCount.textContent =
-    `${appState.streak} dias`
-}
-
-/* =========================================
-   DAILY CONTENT
-========================================= */
-
-function generateDailyContent() {
-
-  const randomAI =
-    aiMessages[
-      Math.floor(
-        Math.random() *
-          aiMessages.length
-      )
-    ]
-
-  aiMessage.textContent =
-    randomAI
-
-  const randomVerse =
-    verses[
-      Math.floor(
-        Math.random() *
-          verses.length
-      )
-    ]
-
-  dailyVerse.textContent =
-    randomVerse
-
-  const randomCardio =
-    cardioIdeas[
-      Math.floor(
-        Math.random() *
-          cardioIdeas.length
-      )
-    ]
-
-  dailyCardio.textContent =
-    randomCardio
-}
-
-/* =========================================
-   CALENDAR
-========================================= */
-
-function renderCalendar() {
-
-  calendarGrid.innerHTML = ''
-
-  const totalDays = 31
-
-  for (
-    let i = 1;
-    i <= totalDays;
-    i++
-  ) {
-
-    const day =
-      document.createElement('div')
-
-    day.classList.add(
-      'calendar-day'
-    )
-
-    if (i === currentDate) {
-      day.classList.add('today')
-    }
-
-    if (
-      appState.completedDays.includes(i)
-    ) {
-      day.classList.add(
-        'completed'
-      )
-    }
-
-    day.textContent = i
-
-    calendarGrid.appendChild(day)
-  }
-}
-
-/* =========================================
-   MODE SYSTEM
-========================================= */
-
-gymModeBtn.addEventListener(
-  'click',
-  () => {
-
-    appState.trainingMode =
-      'gym'
-
-    gymModeBtn.classList.add(
-      'active'
-    )
-
-    homeModeBtn.classList.remove(
-      'active'
-    )
-
-    localStorage.setItem(
-      'trainingMode',
-      'gym'
-    )
-  }
-)
-
-homeModeBtn.addEventListener(
-  'click',
-  () => {
-
-    appState.trainingMode =
-      'home'
-
-    homeModeBtn.classList.add(
-      'active'
-    )
-
-    gymModeBtn.classList.remove(
-      'active'
-    )
-
-    localStorage.setItem(
-      'trainingMode',
-      'home'
-    )
-  }
-)
-
-/* =========================================
-   MISSIONS COUNT
-========================================= */
-
-function updateMissionCount() {
-
-  missionsCompleted.textContent =
-    appState.completedToday.length
-}
-
-/* =========================================
-   CHECKOUT
-========================================= */
-
-document
-  .getElementById(
-    'checkout-btn'
-  )
-  .addEventListener(
-    'click',
-    () => {
-
-      window.location.href =
-        'https://pay.kiwify.com.br/SEU-LINK'
-    }
-  )
-
-/* =========================================
-   INIT
-========================================= */
-
-function init() {
-
-  renderTraining()
-
-  renderMissions()
-
-  generateDailyContent()
-
-  renderCalendar()
-
-  updateMissionCount()
-
-  updateStreak()
-
-  calculateXP()
-}
-
-init()
-
-/* =========================================
-   MENU NAVIGATION
-========================================= */
-
-const menuItems =
-  document.querySelectorAll('.menu-item')
-
-menuItems.forEach((item) => {
-
-  item.addEventListener(
-    'click',
-    () => {
-
-      menuItems.forEach((btn) => {
-        btn.classList.remove('active')
-      })
-
-      item.classList.add('active')
-
-      const target =
-        item.dataset.target
-
-      if (target === 'top') {
-
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth',
-        })
-
-        return
-      }
-
-      const section =
-        document.getElementById(target)
-
-      if (section) {
-
-        section.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',
-        })
-      }
-    }
-  )
-})
-
-/* =========================================
-   PROGRESS SYSTEM
+   PROGRESS BARS
 ========================================= */
 
 function updateProgressBars() {
@@ -863,47 +560,325 @@ function updateProgressBars() {
     }
   })
 
-  const disciplinePercent =
+  const discipline =
     Math.min(
-      Math.floor(
-        disciplineXP / 2
-      ),
+      Math.floor(disciplineXP),
       100
     )
 
-  const mindsetPercent =
+  const mindset =
     Math.min(
-      Math.floor(
-        mindsetXP / 2
-      ),
+      Math.floor(mindsetXP),
       100
     )
 
-  const spiritualPercent =
+  const spiritual =
     Math.min(
-      Math.floor(
-        spiritualXP / 2
-      ),
+      Math.floor(spiritualXP),
       100
     )
 
   document.querySelector(
     '.discipline-fill'
   ).style.width =
-    `${disciplinePercent}%`
+    `${discipline}%`
 
   document.querySelector(
     '.mentality-fill'
   ).style.width =
-    `${mindsetPercent}%`
+    `${mindset}%`
 
   document.querySelector(
     '.spiritual-fill'
   ).style.width =
-    `${spiritualPercent}%`
+    `${spiritual}%`
 
   document.getElementById(
     'discipline-percent'
   ).textContent =
-    `${disciplinePercent}%`
+    `${discipline}%`
 }
+
+/* =========================================
+   CALENDAR
+========================================= */
+
+function renderCalendar() {
+
+  calendarGrid.innerHTML = ''
+
+  const totalDays =
+    new Date(
+      currentYear,
+      currentMonth + 1,
+      0
+    ).getDate()
+
+  for (
+    let i = 1;
+    i <= totalDays;
+    i++
+  ) {
+
+    const day =
+      document.createElement('div')
+
+    day.classList.add('calendar-day')
+
+    if (i === currentDate) {
+      day.classList.add('today')
+    }
+
+    if (
+      appState.completedDays.includes(i)
+    ) {
+
+      day.classList.add('completed')
+    }
+
+    day.textContent = i
+
+    calendarGrid.appendChild(day)
+  }
+}
+
+/* =========================================
+   COMPLETE DAY
+========================================= */
+
+function checkCompletedDay() {
+
+  if (
+    appState.completedToday.length >= 5
+  ) {
+
+    if (
+      !appState.completedDays.includes(
+        currentDate
+      )
+    ) {
+
+      appState.completedDays.push(
+        currentDate
+      )
+
+      localStorage.setItem(
+        'completedDays',
+        JSON.stringify(
+          appState.completedDays
+        )
+      )
+
+      appState.streak += 1
+
+      localStorage.setItem(
+        'streak',
+        appState.streak
+      )
+
+      renderCalendar()
+
+      updateStreak()
+    }
+  }
+}
+
+/* =========================================
+   STREAK
+========================================= */
+
+function updateStreak() {
+
+  streakCount.textContent =
+    `${appState.streak} dias`
+}
+
+/* =========================================
+   DAILY CONTENT
+========================================= */
+
+function generateDailyContent() {
+
+  aiMessage.textContent =
+    aiMessages[
+      Math.floor(
+        Math.random() *
+          aiMessages.length
+      )
+    ]
+
+  dailyVerse.textContent =
+    verses[
+      Math.floor(
+        Math.random() *
+          verses.length
+      )
+    ]
+
+  dailyCardio.textContent =
+    cardioIdeas[
+      Math.floor(
+        Math.random() *
+          cardioIdeas.length
+      )
+    ]
+}
+
+/* =========================================
+   MENU NAVIGATION
+========================================= */
+
+const menuItems =
+  document.querySelectorAll('.menu-item')
+
+menuItems.forEach((item) => {
+
+  item.addEventListener(
+    'click',
+    () => {
+
+      menuItems.forEach((btn) => {
+        btn.classList.remove('active')
+      })
+
+      item.classList.add('active')
+
+      const target =
+        item.dataset.target
+
+      if (!target) return
+
+      if (target === 'top') {
+
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        })
+
+        return
+      }
+
+      const section =
+        document.getElementById(target)
+
+      if (section) {
+
+        section.scrollIntoView({
+          behavior: 'smooth',
+        })
+      }
+    }
+  )
+})
+
+/* =========================================
+   MODE SYSTEM
+========================================= */
+
+function loadTrainingMode() {
+
+  if (
+    appState.trainingMode === 'home'
+  ) {
+
+    homeModeBtn.classList.add(
+      'active'
+    )
+
+    gymModeBtn.classList.remove(
+      'active'
+    )
+
+  } else {
+
+    gymModeBtn.classList.add(
+      'active'
+    )
+
+    homeModeBtn.classList.remove(
+      'active'
+    )
+  }
+}
+
+gymModeBtn.addEventListener(
+  'click',
+  () => {
+
+    appState.trainingMode = 'gym'
+
+    localStorage.setItem(
+      'trainingMode',
+      'gym'
+    )
+
+    loadTrainingMode()
+  }
+)
+
+homeModeBtn.addEventListener(
+  'click',
+  () => {
+
+    appState.trainingMode = 'home'
+
+    localStorage.setItem(
+      'trainingMode',
+      'home'
+    )
+
+    loadTrainingMode()
+  }
+)
+
+/* =========================================
+   MISSION COUNT
+========================================= */
+
+function updateMissionCount() {
+
+  missionsCompleted.textContent =
+    appState.completedToday.length
+}
+
+/* =========================================
+   CHECKOUT
+========================================= */
+
+document
+  .getElementById(
+    'checkout-btn'
+  )
+  .addEventListener(
+    'click',
+    () => {
+
+      window.location.href =
+        'https://pay.kiwify.com.br/SEU-LINK'
+    }
+  )
+
+/* =========================================
+   INIT
+========================================= */
+
+function init() {
+
+  renderTraining()
+
+  renderMissions()
+
+  renderCalendar()
+
+  generateDailyContent()
+
+  updateXP()
+
+  updateStreak()
+
+  updateProgressBars()
+
+  loadTrainingMode()
+}
+
+init()
