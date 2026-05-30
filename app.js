@@ -1,4 +1,11 @@
 import { firebaseSettings } from "./firebase-config.js";
+import {
+  getDailyWorkoutTemplate,
+  workoutGoalLabels,
+  workoutLevelLabels,
+  workoutPlaceLabels,
+  workoutSafetyNote,
+} from "./workouts.js";
 
 const FIREBASE_VERSION = "12.14.0";
 const STORAGE_KEY = "discipline-system-mvp";
@@ -12,15 +19,21 @@ const defaultState = {
     dailyMinutes: 30,
     energy: 6,
     focus: "foco",
+    trainingPlace: "home",
+    trainingLevel: "beginner",
+    workoutGoal: "strength",
+    trainingLimitations: "",
     blocker: "Perco consistência quando o dia fica cheio.",
   },
   stats: {
     xp: 0,
     streak: 0,
     level: 1,
+    workoutsDone: 0,
     lastCompletionDate: "",
   },
   missions: [],
+  workouts: [],
   skills: [
     {
       id: crypto.randomUUID(),
@@ -72,6 +85,15 @@ const defaultState = {
       type: "Grupo",
       rule: "Todos fazem uma ação social desconfortável por dia e registram aprendizado.",
       score: "Pontuação por consistência, não por exposição",
+      participants: ["Grupo"],
+      active: true,
+    },
+    {
+      id: crypto.randomUUID(),
+      name: "Treino do Dia",
+      type: "Grupo",
+      rule: "Cada participante faz o treino diario ajustado ao proprio nivel e envia prova honesta.",
+      score: "Pontuacao por consistencia, tecnica e registro de esforco",
       participants: ["Grupo"],
       active: true,
     },
@@ -130,6 +152,20 @@ const elements = {
   navItems: document.querySelectorAll(".nav-item"),
   views: document.querySelectorAll(".view"),
   missionList: document.querySelector("#missionList"),
+  workoutStat: document.querySelector("#workoutStat"),
+  workoutSummary: document.querySelector("#workoutSummary"),
+  warmupList: document.querySelector("#warmupList"),
+  workoutBlocks: document.querySelector("#workoutBlocks"),
+  workoutFinisher: document.querySelector("#workoutFinisher"),
+  cooldownList: document.querySelector("#cooldownList"),
+  workoutChallenge: document.querySelector("#workoutChallenge"),
+  workoutSafety: document.querySelector("#workoutSafety"),
+  workoutDialog: document.querySelector("#workoutDialog"),
+  workoutForm: document.querySelector("#workoutForm"),
+  workoutProofInput: document.querySelector("#workoutProofInput"),
+  workoutEffortInput: document.querySelector("#workoutEffortInput"),
+  workoutScoreInput: document.querySelector("#workoutScoreInput"),
+  workoutNotesInput: document.querySelector("#workoutNotesInput"),
   skillGrid: document.querySelector("#skillGrid"),
   challengeGrid: document.querySelector("#challengeGrid"),
   xpStat: document.querySelector("#xpStat"),
@@ -166,6 +202,7 @@ async function bootstrap() {
   hydrateProfileForm();
   await setupBackend();
   await loadState();
+  ensureDailyWorkout();
   ensureDailyMissions();
   renderAll();
 }
@@ -283,6 +320,7 @@ async function loadState() {
       profile: { ...defaultState.profile, ...loaded.profile },
       stats: { ...defaultState.stats, ...loaded.stats },
       missions: loaded.missions || [],
+      workouts: loaded.workouts || [],
       skills: loaded.skills?.length ? loaded.skills : structuredClone(defaultState.skills),
       challenges: loaded.challenges?.length ? loaded.challenges : structuredClone(defaultState.challenges),
       reviews: loaded.reviews || [],
@@ -295,6 +333,70 @@ async function persist() {
   await backend.save(state);
 }
 
+function getTodaysWorkout() {
+  return state.workouts.find((workout) => workout.date === todayKey);
+}
+
+function ensureDailyWorkout(force = false) {
+  const existing = getTodaysWorkout();
+  if (existing && !force) {
+    upsertWorkoutMission(existing);
+    return existing;
+  }
+
+  const template = getDailyWorkoutTemplate(
+      state.profile.trainingPlace,
+      state.profile.trainingLevel,
+      state.profile.workoutGoal,
+      todayKey
+  );
+
+  const workout = {
+    ...template,
+    id: crypto.randomUUID(),
+    date: todayKey,
+    place: state.profile.trainingPlace || "home",
+    level: state.profile.trainingLevel || "beginner",
+    goal: state.profile.workoutGoal || "strength",
+    completed: false,
+    completedAt: "",
+    proofText: "",
+    effort: "",
+    score: "",
+    notes: "",
+  };
+
+  state.workouts = [...state.workouts.filter((item) => item.date !== todayKey), workout];
+  upsertWorkoutMission(workout);
+  return workout;
+}
+
+function upsertWorkoutMission(workout) {
+  const existing = state.missions.find((item) => item.workoutId === workout.id || item.id === `workout-${workout.date}`);
+  const workoutMission = {
+    id: existing?.id || `workout-${workout.date}`,
+    workoutId: workout.id,
+    title: `Treino do dia: ${workout.title}`,
+    area: "Treino",
+    description: `${workoutPlaceLabels[workout.place]} · ${workoutLevelLabels[workout.level]} · ${workout.duration} min. Abra a aba Treinos e registre sua prova.`,
+    difficulty: workout.difficulty,
+    minutes: workout.duration,
+    proof: workout.proof,
+    principle: "progressao + desafio social",
+    xp: workout.xp,
+    date: workout.date,
+    done: workout.completed,
+    completedAt: workout.completedAt,
+    proofText: workout.proofText,
+    reflection: workout.notes,
+  };
+
+  state.missions = [
+    ...state.missions.filter((item) => !(item.date === workout.date && item.area === "Treino")),
+    workoutMission,
+  ];
+}
+
 function ensureDailyMissions() {
   const todaysMissions = state.missions.filter((item) => item.date === todayKey);
   if (todaysMissions.length >= 6) return;
@@ -302,6 +404,7 @@ function ensureDailyMissions() {
 }
 
 function generateDailyMissions(force = true) {
+  const workout = ensureDailyWorkout(false);
   const focus = state.profile.focus || "foco";
   const pool = [...(missionLibrary[focus] || missionLibrary.foco), ...universalMissions];
   const energy = Number(state.profile.energy);
@@ -331,8 +434,9 @@ function generateDailyMissions(force = true) {
   }
 
   state.missions = force
-      ? [...state.missions.filter((item) => item.date !== todayKey), ...selected]
+      ? [...state.missions.filter((item) => item.date !== todayKey || item.area === "Treino"), ...selected]
       : [...state.missions, ...selected].filter(uniqueById);
+  upsertWorkoutMission(workout);
 
   persist();
   renderAll();
@@ -370,6 +474,9 @@ function bindEvents() {
   });
 
   elements.missionForm.addEventListener("submit", completeMission);
+  document.querySelector("#changeWorkoutButton").addEventListener("click", changeDailyWorkout);
+  document.querySelector("#completeWorkoutButton").addEventListener("click", openWorkoutDialog);
+  elements.workoutForm.addEventListener("submit", completeWorkout);
   document.querySelector("#addSkillButton").addEventListener("click", () => elements.skillDialog.showModal());
   elements.skillForm.addEventListener("submit", addSkill);
   document.querySelector("#createChallengeButton").addEventListener("click", () => elements.challengeDialog.showModal());
@@ -386,6 +493,7 @@ function bindEvents() {
 function switchView(view) {
   const titles = {
     dashboard: "Plano de hoje",
+    workouts: "Treino do dia",
     skills: "Árvore de habilidades",
     challenges: "Arena social",
     coach: "Coach IA",
@@ -403,6 +511,7 @@ function renderAll() {
   calculateLevel();
   renderStats();
   renderMissions();
+  renderWorkout();
   renderSkills();
   renderChallenges();
   renderReviews();
@@ -413,11 +522,13 @@ function renderAll() {
 function renderStats() {
   const todaysMissions = state.missions.filter((item) => item.date === todayKey);
   const doneToday = todaysMissions.filter((item) => item.done).length;
+  const todaysWorkout = getTodaysWorkout();
   const seasonPercent = Math.min(100, Math.round((doneToday / Math.max(todaysMissions.length, 1)) * 100));
 
   elements.xpStat.textContent = state.stats.xp;
   elements.streakStat.textContent = state.stats.streak;
   elements.todayStat.textContent = `${doneToday}/${todaysMissions.length}`;
+  elements.workoutStat.textContent = todaysWorkout?.completed ? "Feito" : "Aberto";
   elements.levelStat.textContent = state.stats.level;
   elements.levelText.textContent = getLevelName(state.stats.level);
   elements.seasonProgress.style.width = `${seasonPercent}%`;
@@ -467,6 +578,82 @@ function renderMissions() {
   if (!visibleMissions.length) {
     elements.missionList.innerHTML = `<article class="mission-card"><p>Nenhuma missão neste filtro.</p></article>`;
   }
+}
+
+function renderWorkout() {
+  const workout = getTodaysWorkout() || ensureDailyWorkout(false);
+  if (!workout) return;
+
+  const statusText = workout.completed ? "Treino registrado" : "Treino aberto";
+  const goalLabel = workoutGoalLabels[workout.goal] || workoutGoalLabels.strength;
+
+  elements.workoutSummary.innerHTML = `
+    <div>
+      <span class="eyebrow">${escapeHtml(statusText)}</span>
+      <h2>${escapeHtml(workout.title)}</h2>
+      <p>${escapeHtml(workout.focus)}</p>
+    </div>
+    <div class="mission-meta">
+      <span class="pill brand">${escapeHtml(workoutPlaceLabels[workout.place])}</span>
+      <span class="pill gold">${escapeHtml(workoutLevelLabels[workout.level])}</span>
+      <span class="pill blue">${workout.duration} min</span>
+      <span class="pill">${escapeHtml(goalLabel)}</span>
+      <span class="pill">${workout.xp} XP</span>
+    </div>
+    <div class="workout-proof">
+      <strong>Prova:</strong> ${escapeHtml(workout.proof)}
+    </div>
+  `;
+
+  elements.warmupList.innerHTML = workout.warmup.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+  elements.workoutBlocks.innerHTML = workout.blocks
+      .map(
+          (blockItem) => `
+        <article class="workout-card">
+          <div class="section-heading compact">
+            <div>
+              <h3>${escapeHtml(blockItem.title)}</h3>
+              <p>${escapeHtml(blockItem.method)}</p>
+            </div>
+          </div>
+          <div class="exercise-list">
+            ${blockItem.exercises
+              .map(
+                  (exerciseItem) => `
+                  <div class="exercise-row">
+                    <div>
+                      <strong>${escapeHtml(exerciseItem.name)}</strong>
+                      <span>${escapeHtml(exerciseItem.cue)}</span>
+                    </div>
+                    <div class="exercise-data">
+                      <span>${escapeHtml(exerciseItem.sets)} series</span>
+                      <span>${escapeHtml(exerciseItem.reps)}</span>
+                      <span>${escapeHtml(exerciseItem.rest)}</span>
+                    </div>
+                    <small>Escala: ${escapeHtml(exerciseItem.scale)}</small>
+                  </div>
+                `
+              )
+              .join("")}
+          </div>
+        </article>
+      `
+      )
+      .join("");
+
+  elements.workoutFinisher.textContent = workout.finisher;
+  elements.cooldownList.innerHTML = workout.cooldown.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+  elements.workoutChallenge.innerHTML = `
+    <strong>${escapeHtml(workout.challenge.title)}</strong>
+    <p>${escapeHtml(workout.challenge.rules)}</p>
+    <span class="pill">${escapeHtml(workout.challenge.score)}</span>
+  `;
+  elements.workoutSafety.textContent = state.profile.trainingLimitations
+      ? `${workoutSafetyNote} Limitacao informada: ${state.profile.trainingLimitations}`
+      : workoutSafetyNote;
+
+  document.querySelector("#completeWorkoutButton").disabled = workout.completed;
+  document.querySelector("#completeWorkoutButton").textContent = workout.completed ? "Treino registrado" : "Registrar treino";
 }
 
 function renderSkills() {
@@ -551,6 +738,7 @@ function renderCoachAnalysis(showNotification = true) {
   const done = todaysMissions.filter((item) => item.done).length;
   const completion = todaysMissions.length ? Math.round((done / todaysMissions.length) * 100) : 0;
   const hardOpen = todaysMissions.filter((item) => item.difficulty === "Difícil" && !item.done);
+  const workout = getTodaysWorkout();
   const recommendations = [];
 
   if (completion < 40) {
@@ -579,6 +767,13 @@ function renderCoachAnalysis(showNotification = true) {
     });
   }
 
+  if (workout && !workout.completed) {
+    recommendations.push({
+      title: "Treino do dia",
+      text: `${workout.title}: complete o treino ajustando carga para tecnica limpa e registre prova. O placar social deve premiar consistencia, nao exagero.`,
+    });
+  }
+
   recommendations.push({
     title: "Desafio social útil",
     text: "Convide um amigo para validar uma prova de trabalho hoje. Pertencimento aumenta compromisso quando a regra é saudável.",
@@ -603,6 +798,7 @@ function renderExpertPrompt() {
     profile: state.profile,
     stats: state.stats,
     todayMissions: state.missions.filter((item) => item.date === todayKey),
+    todayWorkout: getTodaysWorkout(),
     skills: state.skills,
     challenges: state.challenges,
     latestReviews: state.reviews.slice(-3),
@@ -633,6 +829,11 @@ ${JSON.stringify(context, null, 2)}`;
 function openMissionDialog(id) {
   const item = state.missions.find((missionItem) => missionItem.id === id);
   if (!item) return;
+  if (item.workoutId) {
+    switchView("workouts");
+    openWorkoutDialog();
+    return;
+  }
   activeMissionId = id;
   elements.dialogArea.textContent = item.area;
   elements.dialogTitle.textContent = item.title;
@@ -660,6 +861,63 @@ async function completeMission(event) {
   elements.missionDialog.close();
   renderAll();
   showToast(`Missão concluída. +${item.xp} XP.`);
+}
+
+function openWorkoutDialog() {
+  const workout = getTodaysWorkout() || ensureDailyWorkout(false);
+  if (!workout || workout.completed) {
+    showToast("Treino de hoje ja foi registrado.");
+    return;
+  }
+
+  elements.workoutProofInput.value = "";
+  elements.workoutEffortInput.value = "7";
+  elements.workoutScoreInput.value = "";
+  elements.workoutNotesInput.value = "";
+  elements.workoutDialog.showModal();
+}
+
+async function completeWorkout(event) {
+  event.preventDefault();
+  const workout = getTodaysWorkout();
+  if (!workout || workout.completed) return;
+
+  workout.completed = true;
+  workout.completedAt = new Date().toISOString();
+  workout.proofText = elements.workoutProofInput.value.trim();
+  workout.effort = elements.workoutEffortInput.value;
+  workout.score = elements.workoutScoreInput.value.trim();
+  workout.notes = elements.workoutNotesInput.value.trim();
+  state.stats.xp += workout.xp;
+  state.stats.workoutsDone = (state.stats.workoutsDone || 0) + 1;
+  updateStreak();
+  calculateLevel();
+
+  const missionItem = state.missions.find((mission) => mission.workoutId === workout.id);
+  if (missionItem) {
+    missionItem.done = true;
+    missionItem.completedAt = workout.completedAt;
+    missionItem.proofText = workout.proofText;
+    missionItem.reflection = workout.notes;
+  }
+
+  await persist();
+  elements.workoutDialog.close();
+  renderAll();
+  showToast(`Treino registrado. +${workout.xp} XP.`);
+}
+
+async function changeDailyWorkout() {
+  const current = getTodaysWorkout();
+  if (current?.completed) {
+    showToast("Treino concluido nao pode ser trocado hoje.");
+    return;
+  }
+
+  ensureDailyWorkout(true);
+  await persist();
+  renderAll();
+  showToast("Treino do dia recalculado.");
 }
 
 function updateStreak() {
@@ -753,15 +1011,21 @@ async function addChallenge(event) {
 
 async function saveProfile(event) {
   event.preventDefault();
+  const previousTraining = `${state.profile.trainingPlace}-${state.profile.trainingLevel}-${state.profile.workoutGoal}`;
   state.profile = {
     name: document.querySelector("#nameInput").value.trim() || "Fundador",
     goal: document.querySelector("#goalInput").value.trim(),
     dailyMinutes: Number(document.querySelector("#timeInput").value),
     energy: Number(document.querySelector("#energyInput").value),
     focus: document.querySelector("#focusInput").value,
+    trainingPlace: document.querySelector("#trainingPlaceInput").value,
+    trainingLevel: document.querySelector("#trainingLevelInput").value,
+    workoutGoal: document.querySelector("#workoutGoalInput").value,
+    trainingLimitations: document.querySelector("#trainingLimitationsInput").value.trim(),
     blocker: document.querySelector("#blockInput").value.trim(),
   };
-  await persist();
+  const nextTraining = `${state.profile.trainingPlace}-${state.profile.trainingLevel}-${state.profile.workoutGoal}`;
+  ensureDailyWorkout(previousTraining !== nextTraining);
   generateDailyMissions(true);
   renderAll();
   showToast("Perfil salvo e missões recalibradas.");
@@ -773,6 +1037,10 @@ function hydrateProfileForm() {
   document.querySelector("#timeInput").value = state.profile.dailyMinutes;
   document.querySelector("#energyInput").value = state.profile.energy;
   document.querySelector("#focusInput").value = state.profile.focus;
+  document.querySelector("#trainingPlaceInput").value = state.profile.trainingPlace;
+  document.querySelector("#trainingLevelInput").value = state.profile.trainingLevel;
+  document.querySelector("#workoutGoalInput").value = state.profile.workoutGoal;
+  document.querySelector("#trainingLimitationsInput").value = state.profile.trainingLimitations;
   document.querySelector("#blockInput").value = state.profile.blocker;
 }
 
