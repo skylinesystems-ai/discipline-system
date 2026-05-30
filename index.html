@@ -1,600 +1,313 @@
-<!-- =========================
-INDEX.HTML
-========================= -->
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-
-<head>
-
-  <meta charset="UTF-8" />
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
-
-  <title>
-    Projeto Disciplina
-  </title>
-
-  <link
-    rel="preconnect"
-    href="https://fonts.googleapis.com"
-  />
-
-  <link
-    rel="preconnect"
-    href="https://fonts.gstatic.com"
-    crossorigin
-  />
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-    rel="stylesheet"
-  />
-
-  <link
-    rel="stylesheet"
-    href="./styles.css"
-  />
-
-</head>
-
-<body>
-
-  <div class="background-glow"></div>
-
-  <div class="app-layout">
-
-    <!-- SIDEBAR -->
-
-    <aside class="sidebar">
-
-      <div class="logo-card">
-
-        <div class="logo-box">
-          PD
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Discipline System MVP</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Navegação principal">
+        <div class="brand">
+          <div class="brand-mark">DS</div>
+          <div>
+            <strong>Discipline System</strong>
+            <span>MVP de evolução pessoal</span>
+          </div>
         </div>
 
-        <h2>
-          Projeto Disciplina
-        </h2>
-
-        <p>
-          Sistema de evolução pessoal.
-        </p>
-
-      </div>
-
-      <div class="user-card">
-
-        <div class="user-avatar">
-          ⚡
-        </div>
-
-        <div>
-
-          <h3 id="user-level">
-            Nível 1
-          </h3>
-
-          <p id="user-rank">
-            Recruta
-          </p>
-
-        </div>
-
-      </div>
-
-      <nav class="menu">
-
-        <button
-          class="menu-item active"
-          data-target="top"
-        >
-          Dashboard
-        </button>
-
-        <button
-          class="menu-item"
-          data-target="calendar-section"
-        >
-          Calendário
-        </button>
-
-        <button
-          class="menu-item"
-          data-target="missions-section"
-        >
-          Missões
-        </button>
-
-        <button
-          class="menu-item"
-          data-target="badges-section"
-        >
-          Badges
-        </button>
-
-      </nav>
-
-      <div class="training-mode">
-
-        <span>
-          MODO DE TREINO
-        </span>
-
-        <div class="mode-buttons">
-
-          <button
-            class="mode-btn active"
-            id="gym-mode"
-          >
-            Academia
+        <nav class="nav-list">
+          <button class="nav-item is-active" data-view="dashboard">
+            <span>Hoje</span>
           </button>
-
-          <button
-            class="mode-btn"
-            id="home-mode"
-          >
-            Casa
+          <button class="nav-item" data-view="skills">
+            <span>Habilidades</span>
           </button>
+          <button class="nav-item" data-view="challenges">
+            <span>Desafios</span>
+          </button>
+          <button class="nav-item" data-view="coach">
+            <span>Coach IA</span>
+          </button>
+          <button class="nav-item" data-view="review">
+            <span>Revisão</span>
+          </button>
+          <button class="nav-item" data-view="profile">
+            <span>Perfil</span>
+          </button>
+        </nav>
 
-        </div>
-
-      </div>
-
-      <div class="streak-card">
-
-        <p>
-          🔥 Sequência Atual
-        </p>
-
-        <h2 id="streak-count">
-          0 dias
-        </h2>
-
-      </div>
-
-    </aside>
-
-    <!-- MAIN -->
-
-    <main class="main-content">
-
-      <header class="hero">
-
-        <div>
-
-          <span class="tag">
-            DISCIPLINA
-          </span>
-
-          <h1>
-            Evolua todos os dias.
-          </h1>
-
-          <p>
-            Transforme mente, corpo e espírito.
-          </p>
-
-        </div>
-
-        <div class="hero-right">
-
-          <div class="hero-box">
-
-            <span>
-              XP TOTAL
-            </span>
-
-            <h2 id="xp-total">
-              0
-            </h2>
-
+        <div class="sidebar-card">
+          <span class="eyebrow">Temporada ativa</span>
+          <strong id="seasonName">Temporada de Foco</strong>
+          <div class="progress-track">
+            <span id="seasonProgress"></span>
           </div>
-
-          <div class="hero-box">
-
-            <span>
-              NÍVEL
-            </span>
-
-            <h2 id="level-total">
-              1
-            </h2>
-
-          </div>
-
+          <small id="seasonText">0% da temporada concluída</small>
         </div>
+      </aside>
 
-      </header>
-
-      <!-- EVOLUÇÃO -->
-
-      <section class="progress-section">
-
-        <div class="section-top">
-
+      <main class="main">
+        <header class="topbar">
           <div>
+            <span class="eyebrow" id="currentDate">Hoje</span>
+            <h1 id="viewTitle">Plano de hoje</h1>
+          </div>
+          <div class="topbar-actions">
+            <button class="icon-button" id="syncButton" title="Sincronizar dados">
+              ↻
+            </button>
+            <button class="primary-button" id="generateMissionsButton">
+              Gerar missões
+            </button>
+          </div>
+        </header>
 
-            <span class="tag">
-              EVOLUÇÃO
-            </span>
-
-            <h2>
-              Seu progresso
-            </h2>
-
+        <section class="view is-visible" id="dashboardView">
+          <div class="stats-grid">
+            <article class="metric-card">
+              <span>XP total</span>
+              <strong id="xpStat">0</strong>
+              <small>progresso acumulado</small>
+            </article>
+            <article class="metric-card">
+              <span>Sequência</span>
+              <strong id="streakStat">0</strong>
+              <small>dias consistentes</small>
+            </article>
+            <article class="metric-card">
+              <span>Missões hoje</span>
+              <strong id="todayStat">0/0</strong>
+              <small>concluídas</small>
+            </article>
+            <article class="metric-card">
+              <span>Nível</span>
+              <strong id="levelStat">1</strong>
+              <small id="levelText">iniciante estratégico</small>
+            </article>
           </div>
 
-          <div class="xp-daily">
-
-            <p>
-              XP Diário
-            </p>
-
-            <h3 id="daily-xp">
-              0
-            </h3>
-
-          </div>
-
-        </div>
-
-        <div class="progress-grid">
-
-          <!-- DISCIPLINA -->
-
-          <div class="progress-card">
-
-            <div class="progress-title">
-
-              <span>
-                Disciplina
-              </span>
-
-              <strong id="discipline-percent">
-                0%
-              </strong>
-
-            </div>
-
-            <div class="progress-bar">
-
-              <div
-                class="progress-fill discipline-fill"
-                style="width:0%"
-              ></div>
-
-            </div>
-
-          </div>
-
-          <!-- MENTALIDADE -->
-
-          <div class="progress-card">
-
-            <div class="progress-title">
-
-              <span>
-                Mentalidade
-              </span>
-
-              <strong id="mindset-percent">
-                0%
-              </strong>
-
-            </div>
-
-            <div class="progress-bar">
-
-              <div
-                class="progress-fill mentality-fill"
-                style="width:0%"
-              ></div>
-
-            </div>
-
-          </div>
-
-          <!-- ESPIRITUAL -->
-
-          <div class="progress-card">
-
-            <div class="progress-title">
-
-              <span>
-                Espiritual
-              </span>
-
-              <strong id="spiritual-percent">
-                0%
-              </strong>
-
-            </div>
-
-            <div class="progress-bar">
-
-              <div
-                class="progress-fill spiritual-fill"
-                style="width:0%"
-              ></div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </section>
-
-      <!-- CALENDÁRIO -->
-
-      <section
-        class="calendar-section"
-        id="calendar-section"
-      >
-
-        <div class="section-top">
-
-          <div>
-
-            <span class="tag">
-              CALENDÁRIO
-            </span>
-
-            <h2>
-              Evolução mensal
-            </h2>
-
-          </div>
-
-        </div>
-
-        <div class="week-days">
-
-          <span>DOM</span>
-          <span>SEG</span>
-          <span>TER</span>
-          <span>QUA</span>
-          <span>QUI</span>
-          <span>SEX</span>
-          <span>SAB</span>
-
-        </div>
-
-        <div
-          class="calendar-grid"
-          id="calendar-grid"
-        ></div>
-
-      </section>
-
-      <!-- MISSÕES -->
-
-      <section
-        class="missions-section"
-        id="missions-section"
-      >
-
-        <div class="section-top">
-
-          <div>
-
-            <span class="tag">
-              MISSÕES
-            </span>
-
-            <h2 id="today-title">
-              Segunda-feira
-            </h2>
-
-          </div>
-
-          <div class="daily-complete">
-
-            <p>
-              Concluídas
-            </p>
-
-            <h3 id="missions-completed">
-              0
-            </h3>
-
-          </div>
-
-        </div>
-
-        <!-- TREINO -->
-
-        <div class="daily-training">
-
-          <div class="training-header">
-
+          <div class="section-heading">
             <div>
-
-              <span>
-                TREINO DO DIA
-              </span>
-
-              <h3 id="training-title">
-                Peito
-              </h3>
-
+              <h2>Missões diárias</h2>
+              <p>Missões úteis, com prova de execução e dificuldade ajustável.</p>
             </div>
-
+            <div class="segmented-control" aria-label="Filtro de missões">
+              <button class="is-active" data-filter="all">Todas</button>
+              <button data-filter="open">Abertas</button>
+              <button data-filter="done">Feitas</button>
+            </div>
           </div>
 
-          <div class="training-columns">
+          <div class="mission-list" id="missionList"></div>
+        </section>
 
-            <div class="training-card">
-
-              <h4>
-                Academia
-              </h4>
-
-              <ul id="gym-workout"></ul>
-
+        <section class="view" id="skillsView">
+          <div class="section-heading">
+            <div>
+              <h2>Árvore de habilidades</h2>
+              <p>Treine competências reais com prática deliberada e progressão.</p>
             </div>
+            <button class="secondary-button" id="addSkillButton">Nova habilidade</button>
+          </div>
+          <div class="skill-grid" id="skillGrid"></div>
+        </section>
 
-            <div class="training-card">
-
-              <h4>
-                Casa
-              </h4>
-
-              <ul id="home-workout"></ul>
-
+        <section class="view" id="challengesView">
+          <div class="section-heading">
+            <div>
+              <h2>Arena social</h2>
+              <p>Desafie amigos, grupos e equipes com regras justas.</p>
             </div>
-
+            <button class="secondary-button" id="createChallengeButton">Criar desafio</button>
           </div>
+          <div class="challenge-grid" id="challengeGrid"></div>
+        </section>
 
-        </div>
-
-        <!-- MISSIONS GRID -->
-
-        <div
-          class="missions-grid"
-          id="missions-container"
-        ></div>
-
-      </section>
-
-      <!-- CONTEÚDO -->
-
-      <section class="daily-content-grid">
-
-        <div class="content-card">
-
-          <span class="tag">
-            VERSÍCULO
-          </span>
-
-          <h2>
-            Palavra do Dia
-          </h2>
-
-          <p id="daily-verse"></p>
-
-        </div>
-
-        <div class="content-card">
-
-          <span class="tag">
-            CARDIO
-          </span>
-
-          <h2>
-            Cardio sugerido
-          </h2>
-
-          <p id="daily-cardio"></p>
-
-        </div>
-
-        <div class="content-card ai-card">
-
-          <span class="tag">
-            IA
-          </span>
-
-          <h2>
-            Disciplina AI
-          </h2>
-
-          <p id="ai-message"></p>
-
-        </div>
-
-      </section>
-
-      <!-- BADGES -->
-
-      <section
-        class="badges-section"
-        id="badges-section"
-      >
-
-        <div class="section-top">
-
-          <div>
-
-            <span class="tag">
-              BADGES
-            </span>
-
-            <h2>
-              Conquistas
-            </h2>
-
+        <section class="view" id="coachView">
+          <div class="coach-layout">
+            <article class="coach-panel">
+              <span class="eyebrow">Conselho de especialistas</span>
+              <h2>Coach IA local</h2>
+              <p>
+                Esta versão gera recomendações por regras comportamentais. Depois,
+                você pode conectar uma API de IA usando o mesmo contexto.
+              </p>
+              <div class="coach-output" id="coachOutput"></div>
+              <button class="primary-button" id="coachButton">Analisar minha semana</button>
+            </article>
+            <article class="prompt-panel">
+              <h3>Prompt pronto para IA avançada</h3>
+              <textarea id="expertPrompt" spellcheck="false"></textarea>
+              <button class="secondary-button" id="copyPromptButton">Copiar prompt</button>
+            </article>
           </div>
+        </section>
 
-        </div>
-
-        <div class="badges-grid">
-
-          <div class="badge-card unlocked">
-
-            <div class="badge-icon">
-              🔥
+        <section class="view" id="reviewView">
+          <div class="section-heading">
+            <div>
+              <h2>Revisão semanal</h2>
+              <p>Transforme execução em aprendizado e ajuste de rota.</p>
             </div>
-
-            <h3>
-              DISCIPLINADO
-            </h3>
-
-            <p>
-              7 dias seguidos
-            </p>
-
+            <button class="primary-button" id="saveReviewButton">Salvar revisão</button>
           </div>
-
-          <div class="badge-card locked">
-
-            <div class="badge-icon">
-              ⚔️
-            </div>
-
-            <h3>
-              GUERREIRO
-            </h3>
-
-            <p>
-              30 dias seguidos
-            </p>
-            
+          <div class="review-grid">
+            <label>
+              Vitórias da semana
+              <textarea id="winsInput" placeholder="O que funcionou?"></textarea>
+            </label>
+            <label>
+              Obstáculos
+              <textarea id="obstaclesInput" placeholder="Onde você travou?"></textarea>
+            </label>
+            <label>
+              Ajuste para próxima semana
+              <textarea id="adjustInput" placeholder="Qual regra muda?"></textarea>
+            </label>
+            <label>
+              Compromisso público
+              <textarea id="commitmentInput" placeholder="O que você vai declarar ao grupo?"></textarea>
+            </label>
           </div>
-<div class="badge-card locked">
+          <div class="timeline" id="reviewTimeline"></div>
+        </section>
 
-            <div class="badge-icon">
-              👑
-            </div>
+        <section class="view" id="profileView">
+          <div class="profile-layout">
+            <form class="profile-form" id="profileForm">
+              <div class="section-heading compact">
+                <div>
+                  <h2>Diagnóstico inicial</h2>
+                  <p>O motor de missões usa estes dados para personalizar o plano.</p>
+                </div>
+              </div>
+              <label>
+                Nome
+                <input id="nameInput" type="text" placeholder="Seu nome" />
+              </label>
+              <label>
+                Objetivo de 90 dias
+                <input id="goalInput" type="text" placeholder="Ex: falar inglês em reuniões" />
+              </label>
+              <label>
+                Tempo disponível por dia
+                <select id="timeInput">
+                  <option value="15">15 minutos</option>
+                  <option value="30">30 minutos</option>
+                  <option value="45">45 minutos</option>
+                  <option value="60">60+ minutos</option>
+                </select>
+              </label>
+              <label>
+                Energia atual
+                <input id="energyInput" type="range" min="1" max="10" value="6" />
+              </label>
+              <label>
+                Foco principal
+                <select id="focusInput">
+                  <option value="foco">Foco e disciplina</option>
+                  <option value="comunicacao">Comunicação</option>
+                  <option value="saude">Saúde e energia</option>
+                  <option value="carreira">Carreira</option>
+                  <option value="estudos">Estudos</option>
+                  <option value="financas">Finanças</option>
+                </select>
+              </label>
+              <label>
+                Maior dificuldade
+                <textarea id="blockInput" placeholder="Ex: procrastino depois do trabalho"></textarea>
+              </label>
+              <button class="primary-button" type="submit">Salvar perfil</button>
+            </form>
 
-            <h3>
-              LENDA
-            </h3>
-
-            <p>
-              365 dias seguidos
-            </p>
-
+            <article class="firebase-card">
+              <span class="eyebrow">Backend</span>
+              <h2>Status Firebase</h2>
+              <p id="backendStatus">Modo demo local.</p>
+              <ol>
+                <li>Crie um projeto no Firebase.</li>
+                <li>Ative Authentication por e-mail e senha.</li>
+                <li>Ative Cloud Firestore.</li>
+                <li>Preencha <strong>firebase-config.js</strong>.</li>
+                <li>Publique as regras de <strong>firestore.rules</strong>.</li>
+              </ol>
+            </article>
           </div>
-          
-        </div>
+        </section>
+      </main>
+    </div>
 
-      </section>
+    <dialog id="missionDialog">
+      <form method="dialog" class="dialog-card" id="missionForm">
+        <button class="close-button" type="button" aria-label="Fechar">×</button>
+        <span class="eyebrow" id="dialogArea">Missão</span>
+        <h2 id="dialogTitle">Concluir missão</h2>
+        <p id="dialogDescription"></p>
+        <label>
+          Prova de execução
+          <textarea id="proofInput" placeholder="Cole o link, escreva o resumo ou descreva a evidência." required></textarea>
+        </label>
+        <label>
+          Reflexão rápida
+          <textarea id="reflectionInput" placeholder="O que você aprendeu ao fazer isso?"></textarea>
+        </label>
+        <button class="primary-button" type="submit">Registrar conclusão</button>
+      </form>
+    </dialog>
 
+    <dialog id="skillDialog">
+      <form method="dialog" class="dialog-card" id="skillForm">
+        <button class="close-button" type="button" aria-label="Fechar">×</button>
+        <span class="eyebrow">Nova trilha</span>
+        <h2>Adicionar habilidade</h2>
+        <label>
+          Habilidade
+          <input id="skillNameInput" type="text" placeholder="Ex: vendas, inglês, programação" required />
+        </label>
+        <label>
+          Por que isso importa?
+          <textarea id="skillReasonInput" placeholder="Explique o impacto prático dessa habilidade."></textarea>
+        </label>
+        <button class="primary-button" type="submit">Criar trilha</button>
+      </form>
+    </dialog>
 
-      </section>
+    <dialog id="challengeDialog">
+      <form method="dialog" class="dialog-card" id="challengeForm">
+        <button class="close-button" type="button" aria-label="Fechar">×</button>
+        <span class="eyebrow">Arena social</span>
+        <h2>Criar desafio</h2>
+        <label>
+          Nome do desafio
+          <input id="challengeNameInput" type="text" placeholder="Ex: 7 dias de foco profundo" required />
+        </label>
+        <label>
+          Tipo
+          <select id="challengeTypeInput">
+            <option value="Duelo">Duelo 1x1</option>
+            <option value="Grupo">Grupo</option>
+            <option value="Cooperativo">Cooperativo</option>
+            <option value="Boss fight">Boss fight semanal</option>
+          </select>
+        </label>
+        <label>
+          Regra principal
+          <textarea id="challengeRuleInput" placeholder="Como vencer e qual prova será exigida?"></textarea>
+        </label>
+        <button class="primary-button" type="submit">Criar desafio</button>
+      </form>
+    </dialog>
 
-    </main>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  </div>
-
-  <script src="./script.js"></script>
-
-</body>
-
+    <script type="module" src="app.js"></script>
+  </body>
 </html>
