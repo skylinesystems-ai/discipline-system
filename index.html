@@ -27,6 +27,9 @@
           <button class="nav-item is-active" data-view="dashboard">
             <span>Hoje</span>
           </button>
+          <button class="nav-item" data-view="workouts">
+            <span>Treinos</span>
+          </button>
           <button class="nav-item" data-view="skills">
             <span>Habilidades</span>
           </button>
@@ -88,6 +91,11 @@
               <small>concluídas</small>
             </article>
             <article class="metric-card">
+              <span>Treino hoje</span>
+              <strong id="workoutStat">Aberto</strong>
+              <small>missão física diária</small>
+            </article>
+            <article class="metric-card">
               <span>Nível</span>
               <strong id="levelStat">1</strong>
               <small id="levelText">iniciante estratégico</small>
@@ -107,6 +115,53 @@
           </div>
 
           <div class="mission-list" id="missionList"></div>
+        </section>
+
+        <section class="view" id="workoutsView">
+          <div class="section-heading">
+            <div>
+              <h2>Treino diário</h2>
+              <p>Um treino completo por dia, ajustado ao local, nível e energia.</p>
+            </div>
+            <div class="workout-actions">
+              <button class="secondary-button" id="changeWorkoutButton">Trocar treino</button>
+              <button class="primary-button" id="completeWorkoutButton">Registrar treino</button>
+            </div>
+          </div>
+
+          <article class="workout-hero" id="workoutSummary"></article>
+
+          <div class="workout-layout">
+            <article class="workout-card">
+              <span class="eyebrow">Preparação</span>
+              <h3>Aquecimento</h3>
+              <ol class="step-list" id="warmupList"></ol>
+            </article>
+
+            <article class="workout-card">
+              <span class="eyebrow">Desafio</span>
+              <h3>Placar social</h3>
+              <div class="challenge-box" id="workoutChallenge"></div>
+            </article>
+          </div>
+
+          <div class="workout-blocks" id="workoutBlocks"></div>
+
+          <div class="workout-layout">
+            <article class="workout-card">
+              <span class="eyebrow">Finalização</span>
+              <h3>Finisher</h3>
+              <p id="workoutFinisher"></p>
+            </article>
+
+            <article class="workout-card">
+              <span class="eyebrow">Recuperação</span>
+              <h3>Volta à calma</h3>
+              <ol class="step-list" id="cooldownList"></ol>
+            </article>
+          </div>
+
+          <p class="safety-note" id="workoutSafety"></p>
         </section>
 
         <section class="view" id="skillsView">
@@ -222,25 +277,40 @@
                 </select>
               </label>
               <label>
+                Local do treino
+                <select id="trainingPlaceInput">
+                  <option value="home">Casa sem equipamentos</option>
+                  <option value="gym">Academia</option>
+                </select>
+              </label>
+              <label>
+                Nível físico
+                <select id="trainingLevelInput">
+                  <option value="beginner">Iniciante</option>
+                  <option value="intermediate">Intermediário</option>
+                  <option value="advanced">Avançado</option>
+                </select>
+              </label>
+              <label>
+                Objetivo do treino
+                <select id="workoutGoalInput">
+                  <option value="strength">Força</option>
+                  <option value="muscle">Hipertrofia</option>
+                  <option value="conditioning">Condicionamento</option>
+                  <option value="mobility">Mobilidade</option>
+                </select>
+              </label>
+              <label>
+                Limitações físicas ou cuidados
+                <textarea id="trainingLimitationsInput" placeholder="Ex: dor no joelho, ombro sensível, retorno após pausa"></textarea>
+              </label>
+              <label>
                 Maior dificuldade
                 <textarea id="blockInput" placeholder="Ex: procrastino depois do trabalho"></textarea>
               </label>
               <button class="primary-button" type="submit">Salvar perfil</button>
             </form>
-
-            <article class="firebase-card">
-              <span class="eyebrow">Backend</span>
-              <h2>Status Firebase</h2>
-              <p id="backendStatus">Modo demo local.</p>
-              <ol>
-                <li>Crie um projeto no Firebase.</li>
-                <li>Ative Authentication por e-mail e senha.</li>
-                <li>Ative Cloud Firestore.</li>
-                <li>Preencha <strong>firebase-config.js</strong>.</li>
-                <li>Publique as regras de <strong>firestore.rules</strong>.</li>
-              </ol>
-            </article>
-          </div>
+            
         </section>
       </main>
     </div>
@@ -303,6 +373,31 @@
           <textarea id="challengeRuleInput" placeholder="Como vencer e qual prova será exigida?"></textarea>
         </label>
         <button class="primary-button" type="submit">Criar desafio</button>
+      </form>
+    </dialog>
+
+    <dialog id="workoutDialog">
+      <form method="dialog" class="dialog-card" id="workoutForm">
+        <button class="close-button" type="button" aria-label="Fechar">×</button>
+        <span class="eyebrow">Treino do dia</span>
+        <h2>Registrar treino</h2>
+        <label>
+          Prova do treino
+          <textarea id="workoutProofInput" placeholder="Ex: print do timer, cargas usadas, voltas completas, link de vídeo curto" required></textarea>
+        </label>
+        <label>
+          Esforço percebido: 1 leve, 10 máximo
+          <input id="workoutEffortInput" type="range" min="1" max="10" value="7" />
+        </label>
+        <label>
+          Placar do desafio
+          <input id="workoutScoreInput" type="text" placeholder="Ex: 4 voltas, 32 reps, 8 min, cargas principais" />
+        </label>
+        <label>
+          Observações
+          <textarea id="workoutNotesInput" placeholder="O que melhorou? O que precisa ajustar no próximo treino?"></textarea>
+        </label>
+        <button class="primary-button" type="submit">Salvar treino</button>
       </form>
     </dialog>
 
